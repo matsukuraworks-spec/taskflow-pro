@@ -246,22 +246,22 @@
 
         /* ─── MAIN ────────────────────────────────────────────── */
         .main {
-            padding: 24px 28px 40px;
+            padding: 14px 22px 24px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 10px;
         }
 
         /* ─── QUOTE ───────────────────────────────────────────── */
         .quote-banner {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 14px 18px;
+            gap: 10px;
+            padding: 10px 16px;
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: var(--radius);
+            border-radius: var(--radius-sm);
             backdrop-filter: blur(12px);
         }
 
@@ -291,7 +291,7 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 18px 20px;
+            padding: 12px 16px;
             backdrop-filter: blur(12px);
             transition: all 0.3s ease;
             position: relative;
@@ -317,30 +317,30 @@
         .stat-card:hover::after { opacity: 1; }
 
         .stat-label {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
             letter-spacing: 0.8px;
             text-transform: uppercase;
             color: var(--text-muted);
-            margin-bottom: 10px;
+            margin-bottom: 6px;
         }
 
         .stat-value {
-            font-size: 36px;
+            font-size: 26px;
             font-weight: 900;
             line-height: 1;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             letter-spacing: -1px;
         }
 
-        .stat-sub { font-size: 12px; color: var(--text-secondary); }
+        .stat-sub { font-size: 11px; color: var(--text-secondary); }
 
         /* ─── PROGRESS ────────────────────────────────────────── */
         .progress-section {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 18px 22px;
+            padding: 12px 18px;
             backdrop-filter: blur(12px);
         }
 
@@ -397,11 +397,11 @@
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 8px;
         }
 
         .tasks-title {
-            font-size: 17px;
+            font-size: 15px;
             font-weight: 700;
         }
 
@@ -414,8 +414,8 @@
         .search-bar {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 13px;
+            gap: 7px;
+            padding: 6px 11px;
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
@@ -445,12 +445,12 @@
             display: flex;
             align-items: center;
             gap: 5px;
-            padding: 8px 13px;
+            padding: 6px 11px;
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
             color: var(--text-secondary);
-            font-size: 13px;
+            font-size: 12px;
             font-family: inherit;
             cursor: pointer;
             transition: all 0.2s;
@@ -496,19 +496,19 @@
 
         /* ─── TASK CARDS ──────────────────────────────────────── */
         .tasks-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 7px;
         }
 
         .task-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 15px 18px 15px 22px;
+            border-radius: var(--radius-sm);
+            padding: 10px 12px 10px 17px;
             display: grid;
-            grid-template-columns: 24px 1fr auto;
-            gap: 13px;
+            grid-template-columns: 20px 1fr auto;
+            gap: 10px;
             align-items: start;
             backdrop-filter: blur(12px);
             transition: all 0.25s ease;
@@ -546,9 +546,9 @@
 
         /* Checkbox */
         .chk {
-            width: 22px;
-            height: 22px;
-            border-radius: 7px;
+            width: 18px;
+            height: 18px;
+            border-radius: 5px;
             border: 2px solid var(--border-hover);
             cursor: pointer;
             display: flex;
@@ -577,11 +577,11 @@
         .task-body { min-width: 0; }
 
         .task-name {
-            font-size: 14.5px;
+            font-size: 13px;
             font-weight: 600;
             color: var(--text-primary);
-            margin-bottom: 7px;
-            line-height: 1.4;
+            margin-bottom: 5px;
+            line-height: 1.35;
         }
 
         .task-meta {
@@ -629,15 +629,18 @@
         .badge-date.today   { background: rgba(6,182,212,0.1); color: #22d3ee; }
 
         .task-notes {
-            margin-top: 9px;
-            font-size: 12.5px;
+            margin-top: 5px;
+            font-size: 11.5px;
             color: var(--text-secondary);
-            line-height: 1.55;
-            padding: 8px 11px;
+            line-height: 1.4;
+            padding: 5px 9px;
             background: rgba(255,255,255,0.025);
             border: 1px solid var(--border);
-            border-radius: 7px;
+            border-radius: 6px;
             white-space: pre-wrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-height: 36px;
         }
 
         /* Actions */
@@ -927,8 +930,8 @@
         .voice-bar {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 18px 22px;
+            border-radius: var(--radius-sm);
+            padding: 10px 16px;
             backdrop-filter: blur(12px);
             position: relative;
             overflow: hidden;
@@ -940,17 +943,17 @@
             background: var(--accent-gradient);
         }
         .voice-bar-title {
-            font-size: 12px; font-weight: 700;
+            font-size: 11px; font-weight: 700;
             color: var(--text-secondary);
             letter-spacing: 0.5px;
             display: flex; align-items: center; gap: 8px;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             text-transform: uppercase;
         }
         .voice-dot {
-            width: 7px; height: 7px; border-radius: 50%;
+            width: 6px; height: 6px; border-radius: 50%;
             background: #ef4444;
-            box-shadow: 0 0 6px #ef4444;
+            box-shadow: 0 0 5px #ef4444;
             flex-shrink: 0;
         }
         .voice-dot.listening { animation: vdot 1s ease-in-out infinite; }
@@ -959,16 +962,16 @@
             50%      { opacity: 0.3; transform: scale(0.7); }
         }
         .voice-input-row {
-            display: flex; gap: 10px; align-items: center;
+            display: flex; gap: 8px; align-items: center;
         }
         .voice-input {
             flex: 1;
-            padding: 13px 16px;
+            padding: 9px 13px;
             background: rgba(255,255,255,0.05);
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
             color: var(--text-primary);
-            font-size: 15px; font-family: inherit;
+            font-size: 13px; font-family: inherit;
             outline: none; transition: all 0.2s;
         }
         .voice-input:focus {
@@ -976,33 +979,33 @@
             box-shadow: 0 0 0 3px rgba(139,92,246,0.12);
             background: rgba(139,92,246,0.04);
         }
-        .voice-input::placeholder { color: var(--text-muted); font-size: 13px; }
+        .voice-input::placeholder { color: var(--text-muted); font-size: 12px; }
         .voice-exec {
-            padding: 13px 20px;
+            padding: 9px 16px;
             background: var(--accent-gradient);
             border: none; border-radius: var(--radius-sm);
-            color: #fff; font-size: 13px; font-weight: 700;
+            color: #fff; font-size: 12px; font-weight: 700;
             cursor: pointer; font-family: inherit;
             box-shadow: 0 4px 14px rgba(139,92,246,0.3);
             transition: all 0.2s; white-space: nowrap;
         }
         .voice-exec:hover { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(139,92,246,0.45); }
         .voice-feedback {
-            margin-top: 10px; font-size: 13px; font-weight: 600;
-            padding: 8px 13px; border-radius: 8px; display: none;
+            margin-top: 7px; font-size: 12px; font-weight: 600;
+            padding: 6px 11px; border-radius: 7px; display: none;
         }
         .voice-feedback.show { display: block; }
         .voice-feedback.ok   { background:rgba(16,185,129,0.1);  color:#34d399; border:1px solid rgba(16,185,129,0.2); }
         .voice-feedback.err  { background:rgba(239,68,68,0.1);   color:#f87171; border:1px solid rgba(239,68,68,0.2); }
         .voice-feedback.info { background:rgba(139,92,246,0.1);  color:#a78bfa; border:1px solid rgba(139,92,246,0.2); }
         .voice-examples {
-            margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px;
+            margin-top: 7px; display: flex; flex-wrap: wrap; gap: 5px;
         }
         .voice-ex {
-            padding: 4px 11px;
+            padding: 3px 9px;
             background: rgba(255,255,255,0.04);
             border: 1px solid var(--border);
-            border-radius: 20px; font-size: 11px;
+            border-radius: 20px; font-size: 10.5px;
             color: var(--text-muted); cursor: pointer;
             transition: all 0.15s;
         }
@@ -1010,6 +1013,45 @@
             border-color: var(--accent-purple);
             color: var(--text-secondary);
             background: rgba(139,92,246,0.07);
+        }
+
+        /* ─── DASHBOARD TOGGLE ────────────────────────────────── */
+        .status-strip {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 8px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .status-strip:hover { border-color: var(--border-hover); background: var(--bg-card-hover); }
+        .status-strip-stats {
+            display: flex; gap: 16px; align-items: center;
+        }
+        .ss-item {
+            display: flex; align-items: center; gap: 5px;
+            font-size: 12px; font-weight: 600; color: var(--text-secondary);
+        }
+        .ss-num { font-size: 14px; font-weight: 800; }
+        .ss-label { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+        .ss-toggle { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted); }
+        .ss-chevron { transition: transform 0.3s; }
+        .ss-chevron.open { transform: rotate(180deg); }
+
+        .dashboard-panel {
+            display: flex; flex-direction: column; gap: 10px;
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.4s ease, opacity 0.3s ease, margin 0.3s ease;
+            margin-top: 0;
+        }
+        .dashboard-panel.open {
+            max-height: 500px;
+            opacity: 1;
+            margin-top: 0;
         }
 
         /* ─── TASK NUMBER BADGE ────────────────────────────────── */
@@ -1108,11 +1150,14 @@
             .app-layout { grid-template-columns: 1fr; }
             .sidebar { display: none; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .tasks-list { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 520px) {
             .stats-grid { grid-template-columns: 1fr 1fr; }
             .header-date { display: none; }
+            .tasks-list { grid-template-columns: 1fr; }
+            .status-strip-stats { gap: 10px; }
         }
     </style>
 </head>
@@ -1200,45 +1245,79 @@
     <!-- ═══ MAIN ══════════════════════════════════════════════════ -->
     <main class="main">
 
-        <!-- Quote -->
-        <div class="quote-banner">
-            <span class="quote-icon">💡</span>
-            <div class="quote-text" id="quoteEl"></div>
+        <!-- Status Strip (always visible) -->
+        <div class="status-strip" onclick="toggleDash()" title="クリックで詳細を展開">
+            <div class="status-strip-stats">
+                <div class="ss-item">
+                    <span class="ss-num" id="sTot" style="background:var(--accent-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">0</span>
+                    <span class="ss-label">タスク</span>
+                </div>
+                <div class="ss-item">
+                    <span class="ss-num" id="sDone" style="color:#34d399">0</span>
+                    <span class="ss-label">完了</span>
+                </div>
+                <div class="ss-item">
+                    <span class="ss-num" id="sToday" style="color:#22d3ee">0</span>
+                    <span class="ss-label">今日</span>
+                </div>
+                <div class="ss-item">
+                    <span class="ss-num" id="sOver" style="color:#f87171">0</span>
+                    <span class="ss-label">超過</span>
+                </div>
+                <div class="ss-item" style="margin-left:4px">
+                    <div class="progress-track" style="width:100px;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden">
+                        <div class="progress-fill" id="pBar" style="width:0%"></div>
+                    </div>
+                    <span class="ss-num" id="pPct" style="font-size:12px;margin-left:6px;background:var(--accent-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">0%</span>
+                </div>
+            </div>
+            <div class="ss-toggle">
+                <span id="dashLabel">詳細</span>
+                <i class="fa-solid fa-chevron-down ss-chevron" id="dashChevron"></i>
+            </div>
         </div>
 
-        <!-- Stats -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-label">総タスク数</div>
-                <div class="stat-value" id="sTot"
-                     style="background:var(--accent-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">0</div>
-                <div class="stat-sub">登録中のタスク</div>
+        <!-- Dashboard Panel (collapsible) -->
+        <div class="dashboard-panel" id="dashPanel">
+            <!-- Quote -->
+            <div class="quote-banner">
+                <span class="quote-icon">💡</span>
+                <div class="quote-text" id="quoteEl"></div>
             </div>
-            <div class="stat-card">
-                <div class="stat-label">完了済み</div>
-                <div class="stat-value" id="sDone" style="color:#34d399">0</div>
-                <div class="stat-sub">タスク完了数</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">今日の期限</div>
-                <div class="stat-value" id="sToday" style="color:#22d3ee">0</div>
-                <div class="stat-sub">本日締切</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">期限超過</div>
-                <div class="stat-value" id="sOver" style="color:#f87171">0</div>
-                <div class="stat-sub">要対応</div>
-            </div>
-        </div>
 
-        <!-- Progress -->
-        <div class="progress-section">
-            <div class="progress-header">
-                <span class="progress-title">📊 全体の達成率</span>
-                <span class="progress-pct" id="pPct">0%</span>
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">総タスク数</div>
+                    <div class="stat-value" style="background:var(--accent-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text" id="sTot2">0</div>
+                    <div class="stat-sub">登録中のタスク</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">完了済み</div>
+                    <div class="stat-value" style="color:#34d399" id="sDone2">0</div>
+                    <div class="stat-sub">タスク完了数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">今日の期限</div>
+                    <div class="stat-value" style="color:#22d3ee" id="sToday2">0</div>
+                    <div class="stat-sub">本日締切</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">期限超過</div>
+                    <div class="stat-value" style="color:#f87171" id="sOver2">0</div>
+                    <div class="stat-sub">要対応</div>
+                </div>
             </div>
-            <div class="progress-track">
-                <div class="progress-fill" id="pBar" style="width:0%"></div>
+
+            <!-- Progress -->
+            <div class="progress-section">
+                <div class="progress-header">
+                    <span class="progress-title">📊 全体の達成率</span>
+                    <span class="progress-pct" id="pPct2">0%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="pBar2" style="width:0%"></div>
+                </div>
             </div>
         </div>
 
@@ -1445,6 +1524,16 @@ const QUOTES = [
 /* ══════════════════════════════════════════════════════════
    INIT
 ══════════════════════════════════════════════════════════ */
+function toggleDash() {
+    const panel   = document.getElementById('dashPanel');
+    const chevron = document.getElementById('dashChevron');
+    const label   = document.getElementById('dashLabel');
+    const isOpen  = panel.classList.toggle('open');
+    chevron.classList.toggle('open', isOpen);
+    label.textContent = isOpen ? '閉じる' : '詳細';
+    localStorage.setItem('tf_dashOpen', isOpen ? '1' : '0');
+}
+
 function init() {
     // Date header
     const now = new Date();
@@ -1459,6 +1548,16 @@ function init() {
     // Streak
     checkStreak();
     document.getElementById('streakNum').textContent = streak;
+
+    // Restore dashboard open state (default: closed)
+    if (localStorage.getItem('tf_dashOpen') === '1') {
+        const panel   = document.getElementById('dashPanel');
+        const chevron = document.getElementById('dashChevron');
+        const label   = document.getElementById('dashLabel');
+        panel.classList.add('open');
+        chevron.classList.add('open');
+        label.textContent = '閉じる';
+    }
 
     renderAll();
 
@@ -1605,12 +1704,21 @@ function renderStats() {
     const over = tasks.filter(t => isOverdue(t)).length;
     const pct  = tot > 0 ? Math.round((done / tot) * 100) : 0;
 
+    // Status strip (always visible)
     document.getElementById('sTot').textContent   = tot;
     document.getElementById('sDone').textContent  = done;
     document.getElementById('sToday').textContent = tod;
     document.getElementById('sOver').textContent  = over;
     document.getElementById('pPct').textContent   = pct + '%';
     document.getElementById('pBar').style.width   = pct + '%';
+
+    // Dashboard panel (collapsible)
+    document.getElementById('sTot2').textContent   = tot;
+    document.getElementById('sDone2').textContent  = done;
+    document.getElementById('sToday2').textContent = tod;
+    document.getElementById('sOver2').textContent  = over;
+    document.getElementById('pPct2').textContent   = pct + '%';
+    document.getElementById('pBar2').style.width   = pct + '%';
 }
 
 function renderSideCounts() {
