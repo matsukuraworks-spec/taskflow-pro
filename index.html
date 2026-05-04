@@ -1175,7 +1175,19 @@
 /* ══════════════════════════════════════════════════════════
    STATE
 ══════════════════════════════════════════════════════════ */
-let tasks   = JSON.parse(localStorage.getItem('tf_tasks')  || '[]');
+const INITIAL_TASKS = [
+    { id:'s1', name:'ゆうすけさん',                              priority:'high',   status:'todo', due:'', requester:'', executor:'', cat:'', notes:'',                                                                                                                                                   created:'2026-05-05T00:00:00.000Z' },
+    { id:'s2', name:'しばさん 教育体制マニュアル',                priority:'medium', status:'todo', due:'', requester:'', executor:'', cat:'', notes:'',                                                                                                                                                   created:'2026-05-05T00:00:01.000Z' },
+    { id:'s3', name:'cursorみる',                                 priority:'medium', status:'todo', due:'', requester:'', executor:'', cat:'', notes:'https://drive.google.com/file/d/18bYnPRUNl61NMbSRjhYHOId-l22AUUGO/view?usp=sharing',                                                              created:'2026-05-05T00:00:02.000Z' },
+    { id:'s4', name:'X投稿',                                     priority:'medium', status:'todo', due:'', requester:'', executor:'', cat:'', notes:'',                                                                                                                                                   created:'2026-05-05T00:00:03.000Z' },
+    { id:'s5', name:'対談依頼リスト',                             priority:'medium', status:'todo', due:'', requester:'', executor:'', cat:'', notes:'https://docs.google.com/document/d/1xqKEKCmnwztLQR-AgricNRh892ThpyyQjYqXOY09Kh4/edit?tab=t.0',                                                    created:'2026-05-05T00:00:04.000Z' },
+    { id:'s6', name:'岩田さんのチャット参加ややること対応',        priority:'medium', status:'todo', due:'', requester:'', executor:'', cat:'', notes:'',                                                                                                                                                   created:'2026-05-05T00:00:05.000Z' },
+    { id:'s7', name:'アメックス申請と物販講座',                    priority:'low',    status:'todo', due:'', requester:'', executor:'', cat:'', notes:'',                                                                                                                                                   created:'2026-05-05T00:00:06.000Z' },
+    { id:'s8', name:'おと教育動画 台本作成・スペース確保',          priority:'low',    status:'todo', due:'', requester:'', executor:'', cat:'', notes:'',                                                                                                                                                   created:'2026-05-05T00:00:07.000Z' },
+];
+
+let tasks = JSON.parse(localStorage.getItem('tf_tasks') || 'null');
+if (!tasks) { tasks = INITIAL_TASKS; localStorage.setItem('tf_tasks', JSON.stringify(tasks)); }
 let streak  = parseInt(localStorage.getItem('tf_streak')   || '0');
 let lastDay = localStorage.getItem('tf_lastday') || '';
 let editId  = null;
