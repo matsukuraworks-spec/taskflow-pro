@@ -923,6 +923,186 @@
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.09); border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.14); }
 
+        /* ─── VOICE COMMAND BAR ───────────────────────────────── */
+        .voice-bar {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px 22px;
+            backdrop-filter: blur(12px);
+            position: relative;
+            overflow: hidden;
+        }
+        .voice-bar::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0; width: 3px;
+            background: var(--accent-gradient);
+        }
+        .voice-bar-title {
+            font-size: 12px; font-weight: 700;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
+            display: flex; align-items: center; gap: 8px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+        .voice-dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: #ef4444;
+            box-shadow: 0 0 6px #ef4444;
+            flex-shrink: 0;
+        }
+        .voice-dot.listening { animation: vdot 1s ease-in-out infinite; }
+        @keyframes vdot {
+            0%,100% { opacity: 1; transform: scale(1); }
+            50%      { opacity: 0.3; transform: scale(0.7); }
+        }
+        .voice-input-row {
+            display: flex; gap: 10px; align-items: center;
+        }
+        .voice-input {
+            flex: 1;
+            padding: 13px 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 15px; font-family: inherit;
+            outline: none; transition: all 0.2s;
+        }
+        .voice-input:focus {
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 0 3px rgba(139,92,246,0.12);
+            background: rgba(139,92,246,0.04);
+        }
+        .voice-input::placeholder { color: var(--text-muted); font-size: 13px; }
+        .voice-exec {
+            padding: 13px 20px;
+            background: var(--accent-gradient);
+            border: none; border-radius: var(--radius-sm);
+            color: #fff; font-size: 13px; font-weight: 700;
+            cursor: pointer; font-family: inherit;
+            box-shadow: 0 4px 14px rgba(139,92,246,0.3);
+            transition: all 0.2s; white-space: nowrap;
+        }
+        .voice-exec:hover { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(139,92,246,0.45); }
+        .voice-feedback {
+            margin-top: 10px; font-size: 13px; font-weight: 600;
+            padding: 8px 13px; border-radius: 8px; display: none;
+        }
+        .voice-feedback.show { display: block; }
+        .voice-feedback.ok   { background:rgba(16,185,129,0.1);  color:#34d399; border:1px solid rgba(16,185,129,0.2); }
+        .voice-feedback.err  { background:rgba(239,68,68,0.1);   color:#f87171; border:1px solid rgba(239,68,68,0.2); }
+        .voice-feedback.info { background:rgba(139,92,246,0.1);  color:#a78bfa; border:1px solid rgba(139,92,246,0.2); }
+        .voice-examples {
+            margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px;
+        }
+        .voice-ex {
+            padding: 4px 11px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+            border-radius: 20px; font-size: 11px;
+            color: var(--text-muted); cursor: pointer;
+            transition: all 0.15s;
+        }
+        .voice-ex:hover {
+            border-color: var(--accent-purple);
+            color: var(--text-secondary);
+            background: rgba(139,92,246,0.07);
+        }
+
+        /* ─── TASK NUMBER BADGE ────────────────────────────────── */
+        .num-badge {
+            display: inline-flex; align-items: center;
+            padding: 2px 7px; border-radius: 5px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.08);
+            font-size: 11px; font-weight: 700;
+            color: var(--text-muted);
+            font-variant-numeric: tabular-nums;
+            min-width: 32px; justify-content: center;
+        }
+
+        /* ─── CONFIRM POPUP ────────────────────────────────────── */
+        .confirm-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(10px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 2000; opacity: 0; pointer-events: none;
+            transition: opacity 0.25s;
+        }
+        .confirm-overlay.open { opacity: 1; pointer-events: all; }
+        .confirm-box {
+            background: #0d0d24;
+            border: 1px solid rgba(139,92,246,0.3);
+            border-radius: 20px;
+            width: 420px; max-width: 94vw;
+            padding: 28px;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.7), 0 0 60px rgba(139,92,246,0.12);
+            transform: scale(0.93) translateY(16px);
+            transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
+        }
+        .confirm-overlay.open .confirm-box { transform: scale(1) translateY(0); }
+        .confirm-emoji { font-size: 34px; margin-bottom: 14px; }
+        .confirm-msg {
+            font-size: 16px; font-weight: 600;
+            color: var(--text-primary); line-height: 1.55;
+            margin-bottom: 12px;
+        }
+        .confirm-task-chip {
+            font-size: 13px; color: var(--text-secondary);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+            border-radius: 8px; padding: 8px 13px;
+            margin-bottom: 20px; word-break: break-all;
+        }
+        .confirm-btns {
+            display: flex; gap: 10px; margin-bottom: 18px;
+        }
+        .confirm-yes {
+            flex: 1; padding: 11px;
+            background: var(--accent-gradient);
+            border: none; border-radius: var(--radius-sm);
+            color: #fff; font-size: 14px; font-weight: 700;
+            cursor: pointer; font-family: inherit;
+            box-shadow: 0 4px 16px rgba(139,92,246,0.3);
+            transition: all 0.2s;
+        }
+        .confirm-yes:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(139,92,246,0.45); }
+        .confirm-no {
+            padding: 11px 22px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            color: var(--text-secondary); font-size: 14px; font-weight: 700;
+            cursor: pointer; font-family: inherit; transition: all 0.2s;
+        }
+        .confirm-no:hover { border-color: var(--border-hover); color: var(--text-primary); }
+        .confirm-voice-area {
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+        }
+        .confirm-voice-label {
+            font-size: 11px; color: var(--text-muted);
+            font-weight: 600; letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .confirm-voice-input {
+            width: 100%; padding: 10px 13px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary); font-size: 14px;
+            font-family: inherit; outline: none; transition: all 0.2s;
+        }
+        .confirm-voice-input:focus {
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 0 3px rgba(139,92,246,0.1);
+        }
+        .confirm-voice-input::placeholder { color: var(--text-muted); }
+
         /* ─── RESPONSIVE ──────────────────────────────────────── */
         @media (max-width: 860px) {
             .app-layout { grid-template-columns: 1fr; }
@@ -1062,6 +1242,34 @@
             </div>
         </div>
 
+        <!-- Voice Command Bar -->
+        <div class="voice-bar">
+            <div class="voice-bar-title">
+                <span class="voice-dot" id="vDot"></span>
+                🎤 音声コマンド入力 — AQUAVOICEでここに話しかけてください
+            </div>
+            <div class="voice-input-row">
+                <input
+                    class="voice-input"
+                    id="voiceInput"
+                    type="text"
+                    placeholder="例:「3番を完了にして」「cursorみるを削除」「ゆうすけさんを進行中に」"
+                    onkeydown="if(event.key==='Enter') runVoiceCommand()"
+                    oninput="onVoiceType()"
+                >
+                <button class="voice-exec" onclick="runVoiceCommand()">
+                    <i class="fa-solid fa-bolt"></i> 実行
+                </button>
+            </div>
+            <div class="voice-feedback" id="vFeedback"></div>
+            <div class="voice-examples">
+                <span class="voice-ex" onclick="fillVoice('1番を完了にして')">1番を完了にして</span>
+                <span class="voice-ex" onclick="fillVoice('2番を進行中に')">2番を進行中に</span>
+                <span class="voice-ex" onclick="fillVoice('3番を未着手に戻して')">3番を未着手に戻して</span>
+                <span class="voice-ex" onclick="fillVoice('1番を削除')">1番を削除</span>
+            </div>
+        </div>
+
         <!-- Task list -->
         <div class="tasks-header">
             <h2 class="tasks-title" id="listTitle">すべてのタスク</h2>
@@ -1164,6 +1372,31 @@
             <button class="btn btn-pri" onclick="saveTask()">
                 <i class="fa-solid fa-check"></i> 保存する
             </button>
+        </div>
+    </div>
+</div>
+
+<!-- Confirm Popup -->
+<div class="confirm-overlay" id="confirmOverlay">
+    <div class="confirm-box">
+        <div class="confirm-emoji" id="confirmEmoji">🤔</div>
+        <div class="confirm-msg" id="confirmMsg"></div>
+        <div class="confirm-task-chip" id="confirmChip" style="display:none"></div>
+        <div class="confirm-btns" id="confirmBtns">
+            <button class="confirm-yes" id="confirmYes" onclick="confirmExec()">✅ はい、実行</button>
+            <button class="confirm-no"  onclick="closeConfirm()">キャンセル</button>
+        </div>
+        <div class="confirm-voice-area">
+            <div class="confirm-voice-label">
+                <span>🎤</span>「はい」または追加コマンドを音声入力
+            </div>
+            <input
+                class="confirm-voice-input"
+                id="confirmVoiceInput"
+                type="text"
+                placeholder="「はい」→実行　「いいえ」→キャンセル　または新しいコマンドを入力..."
+                onkeydown="if(event.key==='Enter') handleConfirmVoice()"
+            >
         </div>
     </div>
 </div>
@@ -1407,7 +1640,7 @@ function renderTasks() {
         return;
     }
 
-    el.innerHTML = items.map(t => taskCard(t)).join('');
+    el.innerHTML = items.map((t, idx) => taskCard(t, idx + 1)).join('');
 }
 
 function esc(s) {
@@ -1416,9 +1649,10 @@ function esc(s) {
     return d.innerHTML;
 }
 
-function taskCard(t) {
+function taskCard(t, num) {
     const PRI_LBL = { high:'高優先', medium:'中優先', low:'低優先' };
     const STA_LBL = { todo:'未着手', progress:'進行中', done:'完了' };
+    const numLabel = num ? `<span class="num-badge">#${String(num).padStart(2,'0')}</span>` : '';
 
     const today = new Date(); today.setHours(0,0,0,0);
     const d = dueDate(t);
@@ -1455,6 +1689,7 @@ function taskCard(t) {
             <div class="task-body">
                 <div class="task-name">${esc(t.name)}</div>
                 <div class="task-meta">
+                    ${numLabel}
                     <span class="badge badge-${t.priority}">${PRI_LBL[t.priority]}</span>
                     <span class="badge badge-${t.status}">${STA_LBL[t.status]}</span>
                     ${catBadge}
@@ -1469,6 +1704,237 @@ function taskCard(t) {
                 <button class="act-btn delete" onclick="delTask('${t.id}')"  title="削除"><i class="fa-solid fa-trash"></i></button>
             </div>
         </div>`;
+}
+
+/* ══════════════════════════════════════════════════════════
+   VOICE COMMAND SYSTEM
+══════════════════════════════════════════════════════════ */
+let confirmCallback = null;
+let voiceDebounce = null;
+
+// フォームへのサンプル挿入
+function fillVoice(text) {
+    const el = document.getElementById('voiceInput');
+    el.value = text;
+    el.focus();
+}
+
+// 入力中のデバウンス処理（AQUAVOICE用：入力が止まったら自動解析）
+function onVoiceType() {
+    clearTimeout(voiceDebounce);
+    const dot = document.getElementById('vDot');
+    dot.classList.add('listening');
+    voiceDebounce = setTimeout(() => {
+        dot.classList.remove('listening');
+        const val = document.getElementById('voiceInput').value.trim();
+        if (val.length > 3) runVoiceCommand();
+    }, 1200);
+}
+
+// コマンド実行メイン
+function runVoiceCommand() {
+    clearTimeout(voiceDebounce);
+    document.getElementById('vDot').classList.remove('listening');
+    const raw = document.getElementById('voiceInput').value.trim();
+    if (!raw) return;
+
+    const result = parseVoiceCommand(raw);
+
+    // タスクも操作も両方見つかった → 確認ポップアップ
+    if (result.task && result.action) {
+        const actionLabel = result.action === 'delete'
+            ? '削除'
+            : result.action.label + 'に変更';
+        showConfirm(
+            '🎯',
+            `「${result.task.name}」を${actionLabel}します。よろしいですか？`,
+            result.task.name,
+            true,
+            () => execVoice(result.task, result.action)
+        );
+        return;
+    }
+
+    // タスクが見つからない
+    if (!result.task) {
+        const actionHint = result.action
+            ? (result.action === 'delete' ? '削除' : result.action.label + 'に変更')
+            : '操作';
+        setFeedback(`❌ 対象タスクが見つかりませんでした。番号（例:「3番」）またはタスク名をもう少し詳しく教えてください。`, 'err');
+        showConfirm(
+            '🔍',
+            `どのタスクを${actionHint}しますか？\nタスク番号または名前を入力してください。`,
+            null,
+            false,
+            null
+        );
+        return;
+    }
+
+    // 操作が見つからない
+    if (!result.action) {
+        setFeedback(`💬「${result.task.name}」が見つかりました。操作を教えてください。`, 'info');
+        showConfirm(
+            '❓',
+            `「${result.task.name}」に対して何をしますか？\n「完了」「進行中」「未着手」「削除」のいずれかを教えてください。`,
+            result.task.name,
+            false,
+            null,
+            result.task
+        );
+        return;
+    }
+}
+
+// コマンド解析
+function parseVoiceCommand(text) {
+    // ── 1. 操作を特定 ──
+    let action = null;
+    if (/削除|消して|消す|外して|delete|remove/.test(text)) {
+        action = 'delete';
+    } else if (/完了|終わった|終了|done|完成|済み|おわり/.test(text)) {
+        action = { type: 'status', value: 'done', label: '完了' };
+    } else if (/進行中|始めた|着手|進める|スタート|開始|やっている|やってる/.test(text)) {
+        action = { type: 'status', value: 'progress', label: '進行中' };
+    } else if (/未着手|戻す|リセット|戻して|取り消|まだ|todo/.test(text)) {
+        action = { type: 'status', value: 'todo', label: '未着手' };
+    }
+
+    // ── 2. 対象タスクを特定 ──
+    let task = null;
+    const sorted = getSorted(tasks);
+
+    // 番号指定（X番）
+    const numMatch = text.match(/(\d+)\s*番/);
+    if (numMatch) {
+        const idx = parseInt(numMatch[1]) - 1;
+        task = sorted[idx] || null;
+    }
+
+    // 完全一致
+    if (!task) {
+        for (const t of tasks) {
+            if (text.includes(t.name)) { task = t; break; }
+        }
+    }
+
+    // 部分一致（タスク名の一部）
+    if (!task) {
+        for (const t of tasks) {
+            const words = t.name.split(/[・\s、。]/);
+            for (const w of words) {
+                if (w.length >= 2 && text.includes(w)) { task = t; break; }
+            }
+            if (task) break;
+        }
+    }
+
+    return { task, action };
+}
+
+// 実行
+function execVoice(task, action) {
+    closeConfirm();
+    if (action === 'delete') {
+        tasks = tasks.filter(t => t.id !== task.id);
+        save(); renderAll();
+        setFeedback(`✅ 「${task.name}」を削除しました`, 'ok');
+        toast('🗑 タスクを削除しました', 'warn');
+    } else if (action?.type === 'status') {
+        const t = tasks.find(x => x.id === task.id);
+        if (t) {
+            t.status = action.value;
+            if (action.value === 'done') { bumpStreak(); confetti(); }
+            save(); renderAll();
+            setFeedback(`✅ 「${task.name}」を${action.label}に変更しました`, 'ok');
+            toast(`✅ ${task.name} → ${action.label}`, 'success');
+        }
+    }
+    document.getElementById('voiceInput').value = '';
+}
+
+// フィードバック表示
+function setFeedback(msg, type) {
+    const el = document.getElementById('vFeedback');
+    el.textContent = msg;
+    el.className = `voice-feedback show ${type}`;
+    clearTimeout(el._t);
+    el._t = setTimeout(() => el.classList.remove('show'), 5000);
+}
+
+// 確認ポップアップ表示
+function showConfirm(emoji, msg, chipText, showYes, onYes, pendingTask) {
+    document.getElementById('confirmEmoji').textContent = emoji;
+    document.getElementById('confirmMsg').textContent = msg;
+
+    const chip = document.getElementById('confirmChip');
+    if (chipText) { chip.textContent = chipText; chip.style.display = ''; }
+    else          { chip.style.display = 'none'; }
+
+    const yesBtn = document.getElementById('confirmYes');
+    yesBtn.style.display = showYes ? '' : 'none';
+
+    confirmCallback = onYes || null;
+    document.getElementById('confirmOverlay').classList.add('open');
+    document.getElementById('confirmVoiceInput').value = '';
+    setTimeout(() => document.getElementById('confirmVoiceInput').focus(), 120);
+
+    // pendingTask: 操作が不明なときにタスクだけ保持
+    document.getElementById('confirmOverlay')._pendingTask = pendingTask || null;
+}
+
+function closeConfirm() {
+    document.getElementById('confirmOverlay').classList.remove('open');
+    confirmCallback = null;
+}
+
+function confirmExec() {
+    if (confirmCallback) { confirmCallback(); confirmCallback = null; }
+}
+
+// 確認ポップアップ内の音声入力
+function handleConfirmVoice() {
+    const text = document.getElementById('confirmVoiceInput').value.trim();
+    if (!text) return;
+
+    // はい / いいえ
+    if (/^(はい|yes|ok|うん|いいです|お願い|実行|確認)$/i.test(text)) {
+        confirmExec(); return;
+    }
+    if (/^(いいえ|no|キャンセル|cancel|やめ|違う|止め)$/i.test(text)) {
+        closeConfirm();
+        setFeedback('キャンセルしました', 'info');
+        return;
+    }
+
+    // 新しいコマンドとして解析
+    const pendingTask = document.getElementById('confirmOverlay')._pendingTask;
+    const result = parseVoiceCommand(text);
+
+    // ポップアップ内で操作だけ言った場合（pendingTaskあり）
+    if (pendingTask && result.action && !result.task) {
+        closeConfirm();
+        const actionLabel = result.action === 'delete' ? '削除' : result.action.label + 'に変更';
+        showConfirm(
+            '🎯',
+            `「${pendingTask.name}」を${actionLabel}します。よろしいですか？`,
+            pendingTask.name, true,
+            () => execVoice(pendingTask, result.action)
+        );
+        return;
+    }
+
+    // 完全なコマンドとして再解析
+    if (result.task && result.action) {
+        closeConfirm();
+        const actionLabel = result.action === 'delete' ? '削除' : result.action.label + 'に変更';
+        showConfirm(
+            '🎯',
+            `「${result.task.name}」を${actionLabel}します。よろしいですか？`,
+            result.task.name, true,
+            () => execVoice(result.task, result.action)
+        );
+    }
 }
 
 /* ══════════════════════════════════════════════════════════
