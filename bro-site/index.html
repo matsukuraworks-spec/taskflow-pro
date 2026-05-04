@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STELLAR TASK</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+        --bg:      #020817;
+        --bg2:     #060d20;
+        --card:    rgba(6,20,50,0.7);
+        --card-hv: rgba(10,30,70,0.8);
+        --border:  rgba(0,229,255,0.12);
+        --bdr-hv:  rgba(0,229,255,0.35);
+        --cyan:    #00e5ff;
+        --purple:  #9d4dfa;
+        --green:   #00ff88;
+        --red:     #ff2d6b;
+        --orange:  #ff9800;
+        --text:    #c8e6ff;
+        --text2:   #7eb8d4;
+        --muted:   rgba(0,229,255,0.25);
+        --gradient: linear-gradient(135deg,#9d4dfa 0%,#00e5ff 100%);
+        --grad-alt: linear-gradient(135deg,#00e5ff 0%,#00ff88 100%);
+        --glow-c:  0 0 30px rgba(0,229,255,0.25);
+        --glow-p:  0 0 30px rgba(157,77,250,0.25);
+        --radius:  14px;
+        --radius-sm:9px;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    /* Starfield canvas */
+    #starfield {
+        position: fixed; inset: 0;
+        z-index: 0; pointer-events: none;
+    }
+
+    /* Nebula glow bg */
+    body::before {
+        content: '';
+        position: fixed; inset: 0;
+        background:
+            radial-gradient(ellipse 60% 50% at 20% 20%, rgba(157,77,250,0.08) 0%, transparent 60%),
+            radial-gradient(ellipse 50% 40% at 80% 80%, rgba(0,229,255,0.07) 0%, transparent 55%),
+            radial-gradient(ellipse 40% 60% at 60% 30%, rgba(0,255,136,0.04) 0%, transparent 50%);
+        pointer-events: none; z-index: 0;
+    }
+
+    /* scanline */
+    body::after {
+        content: '';
+        position: fixed; inset: 0;
+        background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,229,255,0.015) 2px, rgba(0,229,255,0.015) 4px);
+        pointer-events: none; z-index: 1;
+    }
+
+    /* ── LAYOUT ───────────────────────────────────── */
+    .app {
+        display: grid;
+        grid-template-columns: 248px 1fr;
+        grid-template-rows: 62px 1fr;
+        min-height: 100vh;
+        position: relative; z-index: 2;
+    }
+
+    /* ── HEADER ───────────────────────────────────── */
+    .header {
+        grid-column: 1/-1;
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 0 28px;
+        background: rgba(2,8,23,0.9);
+        backdrop-filter: blur(24px);
+        border-bottom: 1px solid var(--border);
+        position: sticky; top: 0; z-index: 100;
+    }
+
+    .logo { display: flex; align-items: center; gap: 12px; }
+
+    .logo-icon {
+        width: 36px; height: 36px;
+        background: var(--gradient);
+        clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 15px;
+        filter: drop-shadow(0 0 12px rgba(0,229,255,0.5));
+    }
+
+    .logo-text {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 18px; font-weight: 900;
+        background: var(--gradient);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        background-clip: text; letter-spacing: 3px;
+        filter: drop-shadow(0 0 8px rgba(0,229,255,0.4));
+    }
+
+    .header-date {
+        font-size: 12px; font-weight: 600;
+        color: var(--text2); letter-spacing: 1px;
+        padding: 5px 14px;
+        background: rgba(0,229,255,0.06);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        font-family: 'Orbitron', sans-serif;
+    }
+
+    .streak {
+        display: flex; align-items: center; gap: 6px;
+        padding: 7px 16px;
+        background: rgba(0,229,255,0.05);
+        border: 1px solid rgba(0,229,255,0.2);
+        border-radius: 4px;
+        font-size: 13px; font-weight: 700; color: var(--cyan);
+        font-family: 'Orbitron', sans-serif; letter-spacing: 1px;
+        box-shadow: var(--glow-c);
+    }
+
+    .btn-add {
+        display: flex; align-items: center; gap: 7px;
+        padding: 10px 20px;
+        background: transparent;
+        border: 1px solid var(--cyan);
+        border-radius: var(--radius-sm);
+        color: var(--cyan);
+        font-size: 13px; font-weight: 700;
+        cursor: pointer; font-family: 'Orbitron', sans-serif;
+        letter-spacing: 1px;
+        transition: all 0.25s;
+        box-shadow: var(--glow-c);
+    }
+
+    .btn-add:hover {
+        background: rgba(0,229,255,0.1);
+        box-shadow: 0 0 40px rgba(0,229,255,0.4);
+        transform: translateY(-1px);
+    }
+
+    /* ── SIDEBAR ──────────────────────────────────── */
+    .sidebar {
+        background: rgba(2,8,23,0.7);
+        backdrop-filter: blur(12px);
+        border-right: 1px solid var(--border);
+        padding: 20px 10px;
+        display: flex; flex-direction: column; gap: 2px;
+        overflow-y: auto;
+    }
+
+    .s-sep {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 9px; font-weight: 700;
+        letter-spacing: 2.5px; text-transform: uppercase;
+        color: var(--muted);
+        padding: 16px 12px 4px; margin-top: 4px;
+    }
+
+    .s-item {
+        display: flex; align-items: center; gap: 9px;
+        padding: 9px 12px;
+        border-radius: var(--radius-sm);
+        cursor: pointer; transition: all 0.2s;
+        color: var(--text2); font-size: 13px; font-weight: 600;
+        border: 1px solid transparent;
+    }
+
+    .s-item:hover {
+        background: rgba(0,229,255,0.05);
+        border-color: rgba(0,229,255,0.15);
+        color: var(--cyan);
+    }
+
+    .s-item.active {
+        background: rgba(0,229,255,0.08);
+        border-color: rgba(0,229,255,0.3);
+        color: var(--cyan);
+        box-shadow: inset 0 0 20px rgba(0,229,255,0.05);
+    }
+
+    .s-icon { width: 18px; text-align: center; font-size: 13px; }
+
+    .s-count {
+        margin-left: auto; font-size: 11px; font-weight: 700;
+        padding: 2px 8px; border-radius: 3px;
+        background: rgba(0,229,255,0.08);
+        color: var(--text2);
+        min-width: 22px; text-align: center;
+        font-family: 'Orbitron', sans-serif;
+    }
+
+    .s-item.active .s-count { color: var(--cyan); background: rgba(0,229,255,0.12); }
+
+    .p-dot { width: 7px; height: 7px; border-radius: 1px; flex-shrink: 0; }
+
+    /* ── MAIN ─────────────────────────────────────── */
+    .main {
+        padding: 22px 28px 48px;
+        overflow-y: auto;
+        display: flex; flex-direction: column; gap: 18px;
+    }
+
+    /* quote */
+    .quote {
+        display: flex; align-items: center; gap: 12px;
+        padding: 14px 18px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        backdrop-filter: blur(12px);
+        position: relative; overflow: hidden;
+    }
+
+    .quote::before {
+        content: '';
+        position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+        background: var(--gradient);
+    }
+
+    .q-icon { font-size: 22px; flex-shrink: 0; }
+    .q-text { font-size: 13px; color: var(--text2); font-style: italic; line-height: 1.55; }
+    .q-text strong { color: var(--cyan); font-style: normal; font-weight: 600; }
+
+    /* stats */
+    .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+
+    .stat {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px 20px;
+        backdrop-filter: blur(12px);
+        transition: all 0.3s;
+        position: relative; overflow: hidden;
+    }
+
+    .stat::before {
+        content: ''; position: absolute;
+        top: 0; left: 0; right: 0; height: 1px;
+        background: var(--gradient); opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .stat:hover { border-color: var(--bdr-hv); transform: translateY(-3px); box-shadow: var(--glow-c); }
+    .stat:hover::before { opacity: 1; }
+
+    .stat-lbl {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
+        text-transform: uppercase; color: var(--text2); margin-bottom: 10px;
+    }
+
+    .stat-val {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 34px; font-weight: 900; line-height: 1;
+        letter-spacing: -1px; margin-bottom: 4px;
+    }
+
+    .stat-sub { font-size: 11px; color: var(--text2); }
+
+    /* progress */
+    .prog {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius); padding: 16px 20px;
+        backdrop-filter: blur(12px);
+    }
+
+    .prog-hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+
+    .prog-ttl {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 12px; font-weight: 700; letter-spacing: 1.5px;
+        color: var(--text); text-transform: uppercase;
+    }
+
+    .prog-pct {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 14px; font-weight: 900;
+        background: var(--gradient);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .prog-track { height: 6px; background: rgba(0,229,255,0.08); border-radius: 3px; overflow: hidden; position: relative; }
+
+    .prog-fill {
+        height: 100%; background: var(--gradient);
+        border-radius: 3px;
+        transition: width 0.9s cubic-bezier(0.4,0,0.2,1);
+        box-shadow: 0 0 12px rgba(0,229,255,0.5);
+    }
+
+    /* tasks header */
+    .tasks-hd { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+
+    .tasks-ttl {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 15px; font-weight: 800; letter-spacing: 2px;
+        color: var(--text); text-transform: uppercase;
+    }
+
+    .controls { display: flex; align-items: center; gap: 8px; }
+
+    .search {
+        display: flex; align-items: center; gap: 8px;
+        padding: 8px 13px;
+        background: var(--card); border: 1px solid var(--border);
+        border-radius: var(--radius-sm); transition: all 0.2s;
+    }
+    .search:focus-within { border-color: var(--cyan); box-shadow: var(--glow-c); }
+    .search i { color: var(--muted); font-size: 12px; }
+    .search input { background: none; border: none; outline: none; color: var(--text); font-size: 13px; font-family: inherit; width: 170px; }
+    .search input::placeholder { color: var(--muted); }
+
+    .sort-wrap { position: relative; }
+
+    .ctrl {
+        display: flex; align-items: center; gap: 5px;
+        padding: 8px 13px;
+        background: var(--card); border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text2); font-size: 12px; font-weight: 600;
+        font-family: 'Orbitron', sans-serif; letter-spacing: 0.5px;
+        cursor: pointer; transition: all 0.2s;
+    }
+    .ctrl:hover { border-color: var(--cyan); color: var(--cyan); background: rgba(0,229,255,0.05); }
+
+    .sort-menu {
+        position: absolute; top: calc(100% + 5px); right: 0;
+        background: #060d20; border: 1px solid var(--border);
+        border-radius: var(--radius-sm); padding: 6px;
+        min-width: 155px; box-shadow: 0 12px 40px rgba(0,0,0,0.7);
+        z-index: 60; display: none;
+    }
+    .sort-menu.open { display: block; }
+    .sort-opt { padding: 8px 12px; border-radius: 5px; font-size: 12px; cursor: pointer; color: var(--text2); transition: all 0.15s; }
+    .sort-opt:hover { background: rgba(0,229,255,0.06); color: var(--cyan); }
+    .sort-opt.active { color: var(--cyan); background: rgba(0,229,255,0.08); }
+
+    /* task list */
+    .tasks-list { display: flex; flex-direction: column; gap: 8px; }
+
+    .task-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 16px 14px 20px;
+        display: grid; grid-template-columns: 22px 1fr auto;
+        gap: 12px; align-items: start;
+        backdrop-filter: blur(12px);
+        transition: all 0.25s;
+        position: relative; overflow: hidden;
+    }
+
+    .task-card::before {
+        content: ''; position: absolute;
+        left: 0; top: 0; bottom: 0; width: 2px;
+    }
+
+    .task-card.pri-high::before   { background: var(--red);    box-shadow: 0 0 8px var(--red); }
+    .task-card.pri-medium::before { background: var(--purple);  box-shadow: 0 0 8px var(--purple); }
+    .task-card.pri-low::before    { background: var(--green);   box-shadow: 0 0 8px var(--green); }
+
+    .task-card:hover {
+        border-color: rgba(0,229,255,0.3);
+        transform: translateX(4px);
+        box-shadow: var(--glow-c), inset 0 0 40px rgba(0,229,255,0.02);
+    }
+
+    .task-card.done { opacity: 0.35; }
+    .task-card.done .t-name { text-decoration: line-through; color: var(--muted); }
+
+    /* checkbox */
+    .chk {
+        width: 20px; height: 20px;
+        border-radius: 3px;
+        border: 1px solid rgba(0,229,255,0.35);
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0; margin-top: 2px;
+        transition: all 0.3s;
+        font-size: 11px;
+    }
+    .chk:hover { border-color: var(--cyan); box-shadow: var(--glow-c); }
+    .chk.checked {
+        background: var(--gradient); border-color: transparent;
+        color: #000; font-weight: 900;
+        box-shadow: var(--glow-c);
+    }
+    .chk.checked::after { content: '✓'; }
+
+    .t-body { min-width: 0; }
+    .t-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 7px; line-height: 1.4; }
+    .t-meta { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+
+    .badge {
+        display: inline-flex; align-items: center; gap: 3px;
+        padding: 2px 8px; border-radius: 3px;
+        font-size: 10px; font-weight: 700;
+        font-family: 'Orbitron', sans-serif; letter-spacing: 0.3px;
+    }
+
+    .badge-high   { background: rgba(255,45,107,0.12); color: var(--red);    border: 1px solid rgba(255,45,107,0.2); }
+    .badge-medium { background: rgba(157,77,250,0.12); color: var(--purple); border: 1px solid rgba(157,77,250,0.2); }
+    .badge-low    { background: rgba(0,255,136,0.10);  color: var(--green);  border: 1px solid rgba(0,255,136,0.2); }
+
+    .badge-todo     { background: rgba(157,77,250,0.1); color: #c084fc; border:1px solid rgba(157,77,250,0.2); }
+    .badge-progress { background: rgba(255,152,0,0.1);  color: var(--orange);border:1px solid rgba(255,152,0,0.2); }
+    .badge-done     { background: rgba(0,255,136,0.08); color: var(--green); border:1px solid rgba(0,255,136,0.15); }
+
+    .badge-cat { background: rgba(0,229,255,0.08); color: var(--cyan); border:1px solid rgba(0,229,255,0.15); }
+    .badge-req { background: rgba(157,77,250,0.08); color: #c084fc;   border:1px solid rgba(157,77,250,0.15); }
+    .badge-exe { background: rgba(0,255,136,0.08); color: var(--green);border:1px solid rgba(0,255,136,0.15); }
+
+    .badge-date { display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;background:rgba(0,229,255,0.05);color:var(--text2);border:1px solid var(--border); }
+    .badge-date.overdue { background:rgba(255,45,107,0.1);color:var(--red);border-color:rgba(255,45,107,0.2); }
+    .badge-date.today   { background:rgba(0,229,255,0.1);color:var(--cyan);border-color:rgba(0,229,255,0.25); }
+
+    .t-notes { margin-top:8px;font-size:12.5px;color:var(--text2);line-height:1.55;padding:8px 12px;background:rgba(0,229,255,0.04);border:1px solid var(--border);border-radius:6px;white-space:pre-wrap; }
+
+    .t-actions { display:flex;gap:4px;align-items:flex-start;opacity:0;transition:opacity 0.2s; }
+    .task-card:hover .t-actions { opacity:1; }
+
+    .act { width:26px;height:26px;border:none;border-radius:5px;background:rgba(0,229,255,0.06);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all 0.2s;border:1px solid transparent; }
+    .act:hover       { border-color:rgba(0,229,255,0.25);color:var(--cyan);background:rgba(0,229,255,0.1); }
+    .act.del:hover   { border-color:rgba(255,45,107,0.25);color:var(--red);background:rgba(255,45,107,0.08); }
+
+    /* empty */
+    .empty { text-align:center;padding:64px 20px; }
+    .empty i { font-size:48px;display:block;margin-bottom:18px;color:var(--muted);opacity:0.3; }
+    .empty p { font-size:15px;font-weight:600;color:var(--text2);margin-bottom:6px;font-family:'Orbitron',sans-serif;letter-spacing:1px; }
+    .empty span { font-size:12px;color:var(--muted); }
+
+    /* modal */
+    .overlay { position:fixed;inset:0;background:rgba(0,8,30,0.8);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity 0.3s; }
+    .overlay.open { opacity:1;pointer-events:all; }
+
+    .modal { background:#050e25;border:1px solid rgba(0,229,255,0.2);border-radius:18px;width:560px;max-width:96vw;max-height:92vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,0.8),var(--glow-c);transform:translateY(24px) scale(0.96);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1); }
+    .overlay.open .modal { transform:translateY(0) scale(1); }
+
+    .m-head { padding:22px 22px 0;display:flex;justify-content:space-between;align-items:center; }
+    .m-title { font-family:'Orbitron',sans-serif;font-size:16px;font-weight:800;letter-spacing:2px;color:var(--cyan); }
+
+    .m-x { width:30px;height:30px;border:1px solid rgba(0,229,255,0.2);background:transparent;border-radius:5px;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all 0.2s; }
+    .m-x:hover { border-color:var(--cyan);color:var(--cyan);box-shadow:var(--glow-c); }
+
+    .m-body { padding:20px 22px;display:flex;flex-direction:column;gap:16px; }
+    .f-group { display:flex;flex-direction:column;gap:6px; }
+    .f-lbl { font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2); }
+
+    .f-input,.f-sel,.f-area { padding:11px 13px;background:rgba(0,229,255,0.04);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:14px;font-family:inherit;outline:none;transition:all 0.2s;width:100%; }
+    .f-input:focus,.f-sel:focus,.f-area:focus { border-color:var(--cyan);box-shadow:var(--glow-c),inset 0 0 20px rgba(0,229,255,0.03); }
+    .f-area { resize:vertical;min-height:86px;line-height:1.55; }
+    .f-sel option { background:#050e25; }
+
+    .pri-grp { display:flex;gap:8px; }
+    .pri-opt { flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 6px;border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:all 0.2s;background:rgba(0,229,255,0.02); }
+    .pri-opt input { display:none; }
+    .pri-opt .p-ico { font-size:20px; }
+    .pri-opt .p-lbl { font-family:'Orbitron',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px; }
+
+    .pri-opt.ph:hover,.pri-opt.ph.sel { border-color:var(--red);background:rgba(255,45,107,0.08);box-shadow:0 0 20px rgba(255,45,107,0.15); }
+    .pri-opt.pm:hover,.pri-opt.pm.sel { border-color:var(--purple);background:rgba(157,77,250,0.08);box-shadow:0 0 20px rgba(157,77,250,0.15); }
+    .pri-opt.pl:hover,.pri-opt.pl.sel { border-color:var(--green);background:rgba(0,255,136,0.06);box-shadow:0 0 20px rgba(0,255,136,0.12); }
+
+    .pri-opt.ph .p-lbl { color:var(--red); }
+    .pri-opt.pm .p-lbl { color:var(--purple); }
+    .pri-opt.pl .p-lbl { color:var(--green); }
+
+    .f-row { display:grid;grid-template-columns:1fr 1fr;gap:12px; }
+
+    .m-foot { padding:0 22px 22px;display:flex;gap:9px;justify-content:flex-end; }
+    .btn { padding:11px 22px;border-radius:var(--radius-sm);font-size:12px;font-weight:700;cursor:pointer;font-family:'Orbitron',sans-serif;letter-spacing:1px;transition:all 0.2s; }
+    .btn-sec { background:transparent;border:1px solid var(--border);color:var(--text2); }
+    .btn-sec:hover { border-color:var(--cyan);color:var(--cyan); }
+    .btn-pri { background:transparent;border:1px solid var(--cyan);color:var(--cyan);box-shadow:var(--glow-c); }
+    .btn-pri:hover { background:rgba(0,229,255,0.1);box-shadow:0 0 40px rgba(0,229,255,0.4);transform:translateY(-1px); }
+
+    /* toast */
+    .toast-w { position:fixed;bottom:22px;right:22px;display:flex;flex-direction:column;gap:7px;z-index:9999; }
+    .toast { background:#050e25;border:1px solid rgba(0,229,255,0.2);border-radius:10px;padding:11px 15px;display:flex;align-items:center;gap:9px;font-size:13px;font-weight:600;box-shadow:var(--glow-c);animation:toastIn 0.3s ease;max-width:290px; }
+    @keyframes toastIn  { from{transform:translateX(110%);opacity:0} to{transform:translateX(0);opacity:1} }
+    @keyframes toastOut { from{transform:translateX(0);opacity:1}    to{transform:translateX(110%);opacity:0} }
+    .toast.suc .t-i { color:var(--cyan); }
+    .toast.wrn .t-i { color:var(--orange); }
+
+    /* confetti */
+    .cp { position:fixed;pointer-events:none;width:6px;height:6px;border-radius:1px;z-index:9999;animation:cpAnim 1s ease forwards; }
+    @keyframes cpAnim { 0%{transform:translate(0,0) scale(1);opacity:1} 100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0} }
+
+    ::-webkit-scrollbar { width:4px; }
+    ::-webkit-scrollbar-track { background:transparent; }
+    ::-webkit-scrollbar-thumb { background:rgba(0,229,255,0.2);border-radius:2px; }
+
+    @media (max-width:860px) {
+        .app { grid-template-columns:1fr; }
+        .sidebar { display:none; }
+        .stats { grid-template-columns:repeat(2,1fr); }
+    }
+
+    /* タッチデバイス：アクションボタン常時表示 */
+    @media (hover: none) {
+        .t-actions { opacity: 1 !important; }
+    }
+
+    /* スマホ中（〜680px） */
+    @media (max-width:680px) {
+        .app { grid-template-rows:54px auto; }
+        .main { overflow-y:visible; padding:14px 16px 44px; gap:14px; }
+        .header { padding:0 14px; }
+        .header-date { display:none; }
+        .streak { display:none; }
+        .logo-text { font-size:14px; letter-spacing:2px; }
+    }
+
+    /* スマホ小（〜480px） */
+    @media (max-width:480px) {
+        .header { padding:0 12px; }
+        .logo-icon { width:30px; height:30px; font-size:13px; }
+        .logo-text { font-size:12px; letter-spacing:1.5px; }
+        /* 追加ボタン：アイコンのみ */
+        .btn-add { width:36px; height:36px; padding:0; justify-content:center; font-size:0; gap:0; border-radius:var(--radius-sm); }
+        .btn-add i { font-size:13px; }
+        /* メイン */
+        .main { padding:12px 12px 40px; gap:12px; }
+        /* 統計カード */
+        .stats { gap:8px; }
+        .stat { padding:14px 14px; }
+        .stat-val { font-size:26px; }
+        .stat-sub { font-size:11px; }
+        /* 名言 */
+        .quote { padding:12px 14px; }
+        .q-text { font-size:12.5px; }
+        /* タスクヘッダー */
+        .tasks-hd { flex-direction:column; align-items:flex-start; gap:8px; }
+        .controls { width:100%; }
+        .search { flex:1; min-width:0; }
+        .search input { width:100%; min-width:0; }
+        /* タスクカード */
+        .task-card { padding:12px 10px 12px 16px; gap:9px; }
+        .t-name { font-size:13px; margin-bottom:5px; }
+        .badge { font-size:9.5px; padding:2px 6px; }
+        /* 進捗 */
+        .prog { padding:12px 14px; }
+        /* トースト */
+        .toast-w { bottom:14px; right:10px; left:10px; }
+        .toast { max-width:100%; }
+    }
+    </style>
+</head>
+<body>
+
+<canvas id="starfield"></canvas>
+
+<div class="app">
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">🚀</div>
+            <span class="logo-text">STELLAR TASK</span>
+        </div>
+        <div class="header-date" id="hDate"></div>
+        <div style="display:flex;align-items:center;gap:12px">
+            <div class="streak">⚡ <span id="streakNum">0</span> DAYS</div>
+            <button class="btn-add" onclick="openModal()">
+                <i class="fa-solid fa-plus"></i> MISSION ADD
+            </button>
+        </div>
+    </header>
+
+    <aside class="sidebar">
+        <div class="s-sep">Navigation</div>
+        <div class="s-item active" onclick="setFilter('all',this)"><span class="s-icon">◈</span>ALL TASKS<span class="s-count" id="c-all">0</span></div>
+        <div class="s-item" onclick="setFilter('today',this)"><span class="s-icon">◉</span>TODAY<span class="s-count" id="c-today">0</span></div>
+        <div class="s-item" onclick="setFilter('overdue',this)"><span class="s-icon">⚠</span>OVERDUE<span class="s-count" id="c-overdue">0</span></div>
+        <div class="s-item" onclick="setFilter('done',this)"><span class="s-icon">✓</span>COMPLETED<span class="s-count" id="c-done">0</span></div>
+        <div class="s-sep">Priority</div>
+        <div class="s-item" onclick="setFilter('pri-high',this)"><span class="p-dot" style="background:var(--red)"></span>CRITICAL<span class="s-count" id="c-high">0</span></div>
+        <div class="s-item" onclick="setFilter('pri-medium',this)"><span class="p-dot" style="background:var(--purple)"></span>NORMAL<span class="s-count" id="c-medium">0</span></div>
+        <div class="s-item" onclick="setFilter('pri-low',this)"><span class="p-dot" style="background:var(--green)"></span>LOW<span class="s-count" id="c-low">0</span></div>
+        <div class="s-sep">Status</div>
+        <div class="s-item" onclick="setFilter('s-todo',this)"><span class="s-icon" style="color:var(--purple)">●</span>STANDBY<span class="s-count" id="c-todo">0</span></div>
+        <div class="s-item" onclick="setFilter('s-progress',this)"><span class="s-icon" style="color:var(--orange)">◑</span>IN FLIGHT<span class="s-count" id="c-prog">0</span></div>
+        <div class="s-item" onclick="setFilter('s-done',this)"><span class="s-icon" style="color:var(--green)">◉</span>LANDED<span class="s-count" id="c-sdone">0</span></div>
+    </aside>
+
+    <main class="main">
+        <div class="quote">
+            <span class="q-icon">🌌</span>
+            <div class="q-text" id="quoteEl"></div>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-lbl">MISSIONS</div>
+                <div class="stat-val" id="sTot" style="background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">0</div>
+                <div class="stat-sub">total active</div>
+            </div>
+            <div class="stat">
+                <div class="stat-lbl">COMPLETED</div>
+                <div class="stat-val" id="sDone" style="color:var(--green)">0</div>
+                <div class="stat-sub">missions done</div>
+            </div>
+            <div class="stat">
+                <div class="stat-lbl">DUE TODAY</div>
+                <div class="stat-val" id="sToday" style="color:var(--cyan)">0</div>
+                <div class="stat-sub">launching today</div>
+            </div>
+            <div class="stat">
+                <div class="stat-lbl">OVERDUE</div>
+                <div class="stat-val" id="sOver" style="color:var(--red)">0</div>
+                <div class="stat-sub">needs attention</div>
+            </div>
+        </div>
+
+        <div class="prog">
+            <div class="prog-hd">
+                <span class="prog-ttl">◈ MISSION PROGRESS</span>
+                <span class="prog-pct" id="pPct">0%</span>
+            </div>
+            <div class="prog-track"><div class="prog-fill" id="pBar" style="width:0%"></div></div>
+        </div>
+
+        <div class="tasks-hd">
+            <h2 class="tasks-ttl" id="listTitle">ALL MISSIONS</h2>
+            <div class="controls">
+                <div class="search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="searchEl" placeholder="Search missions..." oninput="renderTasks()">
+                </div>
+                <div class="sort-wrap">
+                    <button class="ctrl" onclick="toggleSort(event)"><i class="fa-solid fa-arrow-up-wide-short"></i> SORT</button>
+                    <div class="sort-menu" id="sortMenu">
+                        <div class="sort-opt active" onclick="setSort('priority',this)">Priority</div>
+                        <div class="sort-opt" onclick="setSort('due',this)">Due Date</div>
+                        <div class="sort-opt" onclick="setSort('created',this)">Created</div>
+                        <div class="sort-opt" onclick="setSort('name',this)">Name</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tasks-list" id="taskList"></div>
+    </main>
+</div>
+
+<!-- Modal -->
+<div class="overlay" id="overlay" onclick="overlayClick(event)">
+    <div class="modal">
+        <div class="m-head">
+            <h3 class="m-title" id="mTitle">NEW MISSION</h3>
+            <button class="m-x" onclick="closeModal()">✕</button>
+        </div>
+        <div class="m-body">
+            <div class="f-group">
+                <label class="f-lbl">Mission Name</label>
+                <input class="f-input" id="fName" type="text" placeholder="ミッション名を入力..." onkeydown="if(event.key==='Enter')saveTask()">
+            </div>
+            <div class="f-group">
+                <label class="f-lbl">Priority Level</label>
+                <div class="pri-grp">
+                    <label class="pri-opt ph sel" id="opt-h"><input type="radio" name="pri" value="high" checked onchange="syncPri()"><span class="p-ico">🔴</span><span class="p-lbl">CRITICAL</span></label>
+                    <label class="pri-opt pm" id="opt-m"><input type="radio" name="pri" value="medium" onchange="syncPri()"><span class="p-ico">🟣</span><span class="p-lbl">NORMAL</span></label>
+                    <label class="pri-opt pl" id="opt-l"><input type="radio" name="pri" value="low" onchange="syncPri()"><span class="p-ico">🟢</span><span class="p-lbl">LOW</span></label>
+                </div>
+            </div>
+            <div class="f-row">
+                <div class="f-group">
+                    <label class="f-lbl">Status</label>
+                    <select class="f-sel" id="fStatus"><option value="todo">STANDBY</option><option value="progress">IN FLIGHT</option><option value="done">LANDED</option></select>
+                </div>
+                <div class="f-group">
+                    <label class="f-lbl">Launch Date</label>
+                    <input class="f-input" id="fDue" type="date">
+                </div>
+            </div>
+            <div class="f-row">
+                <div class="f-group"><label class="f-lbl">Requester</label><input class="f-input" id="fReq" type="text" placeholder="依頼者..."></div>
+                <div class="f-group"><label class="f-lbl">Executor</label><input class="f-input" id="fExe" type="text" placeholder="実行者..."></div>
+            </div>
+            <div class="f-group"><label class="f-lbl">Category</label><input class="f-input" id="fCat" type="text" placeholder="カテゴリ..."></div>
+            <div class="f-group"><label class="f-lbl">Mission Log</label><textarea class="f-area" id="fNotes" placeholder="詳細や備考..."></textarea></div>
+        </div>
+        <div class="m-foot">
+            <button class="btn btn-sec" onclick="closeModal()">ABORT</button>
+            <button class="btn btn-pri" onclick="saveTask()">◈ LAUNCH</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast-w" id="toastW"></div>
+
+<script>
+/* Starfield animation */
+(function(){
+    const c=document.getElementById('starfield');
+    const ctx=c.getContext('2d');
+    let W,H,stars=[];
+    function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;stars=[];for(let i=0;i<220;i++){stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4+0.2,a:Math.random(),da:(Math.random()-0.5)*0.008,speed:Math.random()*0.15+0.03});}}
+    function draw(){
+        ctx.clearRect(0,0,W,H);
+        stars.forEach(s=>{
+            s.a+=s.da;if(s.a>1||s.a<0)s.da*=-1;
+            s.y-=s.speed;if(s.y<0){s.y=H;s.x=Math.random()*W;}
+            ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+            ctx.fillStyle=`rgba(200,230,255,${s.a})`;ctx.fill();
+        });
+        requestAnimationFrame(draw);
+    }
+    window.addEventListener('resize',resize);resize();draw();
+})();
+
+/* App logic */
+let tasks  = JSON.parse(localStorage.getItem('stellar_tasks') || '[]');
+let streak = parseInt(localStorage.getItem('stellar_streak') || '0');
+let lastDay= localStorage.getItem('stellar_lastday') || '';
+let editId = null, curFilter='all', curSort='priority';
+
+const PRI_ORD={high:0,medium:1,low:2};
+const QUOTES=[
+    {t:'星の数だけ可能性がある。今日も一つ、前へ。',a:'ー'},
+    {t:'宇宙は広大だ。しかし、最初の一歩は小さくていい。',a:'ー'},
+    {t:'困難は、成長のための燃料だ。',a:'ー'},
+    {t:'達成した瞬間が、次の出発点になる。',a:'ー'},
+    {t:'速さより、方向が大切だ。',a:'ー'},
+    {t:'限界は、自分が決める。宇宙に限界はない。',a:'ー'},
+    {t:'今日の努力が、明日の軌道を決める。',a:'ー'},
+];
+
+const FTITLES={all:'ALL MISSIONS',today:'TODAY\'S MISSIONS',overdue:'OVERDUE',done:'COMPLETED','pri-high':'CRITICAL MISSIONS','pri-medium':'NORMAL MISSIONS','pri-low':'LOW PRIORITY','s-todo':'STANDBY','s-progress':'IN FLIGHT','s-done':'LANDED'};
+
+function init(){
+    const now=new Date();
+    document.getElementById('hDate').textContent=now.toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit'}).replace(/\//g,'.')+' '+['SUN','MON','TUE','WED','THU','FRI','SAT'][now.getDay()];
+    const q=QUOTES[Math.floor(Math.random()*QUOTES.length)];
+    document.getElementById('quoteEl').innerHTML=`<strong>「${q.t}」</strong> — ${q.a}`;
+    checkStreak();document.getElementById('streakNum').textContent=streak;
+    renderAll();
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();openModal();}});
+    document.addEventListener('click',e=>{if(!e.target.closest('.sort-wrap'))document.getElementById('sortMenu').classList.remove('open');});
+}
+
+function checkStreak(){if(!lastDay)return;const ld=new Date(lastDay),y=new Date();y.setDate(y.getDate()-1);const tod=new Date().toDateString();if(ld.toDateString()!==tod&&ld.toDateString()!==y.toDateString()){streak=0;localStorage.setItem('stellar_streak','0');}}
+function bumpStreak(){const tod=new Date().toDateString();if(lastDay===tod)return;streak++;lastDay=tod;localStorage.setItem('stellar_streak',streak);localStorage.setItem('stellar_lastday',tod);document.getElementById('streakNum').textContent=streak;}
+function setFilter(f,el){curFilter=f;document.querySelectorAll('.s-item').forEach(i=>i.classList.remove('active'));if(el)el.classList.add('active');document.getElementById('listTitle').textContent=FTITLES[f]||'MISSIONS';renderTasks();}
+function setSort(s,el){curSort=s;document.querySelectorAll('.sort-opt').forEach(o=>o.classList.remove('active'));el.classList.add('active');document.getElementById('sortMenu').classList.remove('open');renderTasks();}
+function toggleSort(e){e.stopPropagation();document.getElementById('sortMenu').classList.toggle('open');}
+function dueDate(t){return t.due?new Date(t.due+'T00:00:00'):null;}
+function isOver(t){const d=dueDate(t),now=new Date();now.setHours(0,0,0,0);return d&&d<now&&d.toDateString()!==now.toDateString()&&t.status!=='done';}
+function isToday(t){const d=dueDate(t);return d&&d.toDateString()===new Date().toDateString();}
+function getFiltered(){const q=(document.getElementById('searchEl')?.value||'').toLowerCase();return tasks.filter(t=>{const ms=!q||t.name.toLowerCase().includes(q)||(t.notes||'').toLowerCase().includes(q)||(t.cat||'').toLowerCase().includes(q);if(!ms)return false;switch(curFilter){case 'all':return true;case 'today':return isToday(t);case 'overdue':return isOver(t);case 'done':return t.status==='done';case 'pri-high':return t.priority==='high';case 'pri-medium':return t.priority==='medium';case 'pri-low':return t.priority==='low';case 's-todo':return t.status==='todo';case 's-progress':return t.status==='progress';case 's-done':return t.status==='done';default:return true;}});}
+function getSorted(arr){return [...arr].sort((a,b)=>{if(curSort==='priority'){const d=PRI_ORD[a.priority]-PRI_ORD[b.priority];return d!==0?d:new Date(b.created)-new Date(a.created);}if(curSort==='due'){const da=dueDate(a),db=dueDate(b);if(!da&&!db)return 0;if(!da)return 1;if(!db)return -1;return da-db;}if(curSort==='created')return new Date(b.created)-new Date(a.created);if(curSort==='name')return a.name.localeCompare(b.name,'ja');return 0;});}
+function renderAll(){renderStats();renderSide();renderTasks();}
+function renderStats(){const tot=tasks.length,done=tasks.filter(t=>t.status==='done').length,tod=tasks.filter(t=>isToday(t)).length,over=tasks.filter(t=>isOver(t)).length,pct=tot>0?Math.round((done/tot)*100):0;document.getElementById('sTot').textContent=tot;document.getElementById('sDone').textContent=done;document.getElementById('sToday').textContent=tod;document.getElementById('sOver').textContent=over;document.getElementById('pPct').textContent=pct+'%';document.getElementById('pBar').style.width=pct+'%';}
+function renderSide(){document.getElementById('c-all').textContent=tasks.length;document.getElementById('c-today').textContent=tasks.filter(t=>isToday(t)).length;document.getElementById('c-overdue').textContent=tasks.filter(t=>isOver(t)).length;document.getElementById('c-done').textContent=tasks.filter(t=>t.status==='done').length;document.getElementById('c-high').textContent=tasks.filter(t=>t.priority==='high').length;document.getElementById('c-medium').textContent=tasks.filter(t=>t.priority==='medium').length;document.getElementById('c-low').textContent=tasks.filter(t=>t.priority==='low').length;document.getElementById('c-todo').textContent=tasks.filter(t=>t.status==='todo').length;document.getElementById('c-prog').textContent=tasks.filter(t=>t.status==='progress').length;document.getElementById('c-sdone').textContent=tasks.filter(t=>t.status==='done').length;}
+function esc(s){const d=document.createElement('div');d.appendChild(document.createTextNode(s));return d.innerHTML;}
+
+function renderTasks(){
+    const el=document.getElementById('taskList');
+    const items=getSorted(getFiltered());
+    if(!items.length){el.innerHTML=`<div class="empty"><i class="fa-solid fa-rocket"></i><p>NO MISSIONS</p><span>MISSION ADD ボタンから新しいミッションを登録</span></div>`;return;}
+    const PL={high:'CRITICAL',medium:'NORMAL',low:'LOW'};
+    const SL={todo:'STANDBY',progress:'IN FLIGHT',done:'LANDED'};
+    el.innerHTML=items.map(t=>{
+        const d=dueDate(t),over=isOver(t),tod=isToday(t);
+        let db='';if(d){const lbl=`${d.getMonth()+1}/${d.getDate()}`,cls=over?'overdue':tod?'today':'';db=`<span class="badge-date ${cls}">${over?'⚠':''} ${lbl}</span>`;}
+        const cb=t.cat?`<span class="badge badge-cat">${esc(t.cat)}</span>`:'';
+        const rb=t.requester?`<span class="badge badge-req">${esc(t.requester)}</span>`:'';
+        const eb=t.executor?`<span class="badge badge-exe">${esc(t.executor)}</span>`:'';
+        const nb=t.notes?`<div class="t-notes">${esc(t.notes)}</div>`:'';
+        return `<div class="task-card pri-${t.priority} ${t.status==='done'?'done':''}">
+            <div class="chk ${t.status==='done'?'checked':''}" onclick="toggleDone('${t.id}')"></div>
+            <div class="t-body">
+                <div class="t-name">${esc(t.name)}</div>
+                <div class="t-meta"><span class="badge badge-${t.priority}">${PL[t.priority]}</span><span class="badge badge-${t.status}">${SL[t.status]}</span>${cb}${rb}${eb}${db}</div>
+                ${nb}
+            </div>
+            <div class="t-actions">
+                <button class="act" onclick="openEdit('${t.id}')"><i class="fa-solid fa-pen"></i></button>
+                <button class="act del" onclick="delTask('${t.id}')"><i class="fa-solid fa-trash"></i></button>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function toggleDone(id){const t=tasks.find(x=>x.id===id);if(!t)return;const was=t.status==='done';t.status=was?'todo':'done';if(!was){bumpStreak();toast('◈ MISSION COMPLETE!','suc');confetti();}save();renderAll();}
+function delTask(id){if(!confirm('このミッションを削除しますか？'))return;tasks=tasks.filter(t=>t.id!==id);save();renderAll();toast('MISSION DELETED','wrn');}
+function save(){localStorage.setItem('stellar_tasks',JSON.stringify(tasks));}
+function openModal(){editId=null;document.getElementById('mTitle').textContent='NEW MISSION';['fName','fDue','fReq','fExe','fCat','fNotes'].forEach(id=>document.getElementById(id).value='');document.getElementById('fStatus').value='todo';document.querySelector('[name="pri"][value="high"]').checked=true;syncPri();document.getElementById('overlay').classList.add('open');setTimeout(()=>document.getElementById('fName').focus(),80);}
+function openEdit(id){const t=tasks.find(x=>x.id===id);if(!t)return;editId=id;document.getElementById('mTitle').textContent='EDIT MISSION';document.getElementById('fName').value=t.name;document.getElementById('fStatus').value=t.status;document.getElementById('fDue').value=t.due||'';document.getElementById('fReq').value=t.requester||'';document.getElementById('fExe').value=t.executor||'';document.getElementById('fCat').value=t.cat||'';document.getElementById('fNotes').value=t.notes||'';const r=document.querySelector(`[name="pri"][value="${t.priority}"]`);if(r)r.checked=true;syncPri();document.getElementById('overlay').classList.add('open');setTimeout(()=>document.getElementById('fName').focus(),80);}
+function closeModal(){document.getElementById('overlay').classList.remove('open');editId=null;}
+function overlayClick(e){if(e.target===document.getElementById('overlay'))closeModal();}
+function saveTask(){const name=document.getElementById('fName').value.trim();if(!name){const el=document.getElementById('fName');el.style.borderColor='var(--red)';el.focus();setTimeout(()=>el.style.borderColor='',1400);return;}const priority=document.querySelector('[name="pri"]:checked')?.value||'medium',status=document.getElementById('fStatus').value,due=document.getElementById('fDue').value,requester=document.getElementById('fReq').value.trim(),executor=document.getElementById('fExe').value.trim(),cat=document.getElementById('fCat').value.trim(),notes=document.getElementById('fNotes').value.trim();if(editId){const t=tasks.find(x=>x.id===editId);if(t)Object.assign(t,{name,priority,status,due,requester,executor,cat,notes});toast('◈ MISSION UPDATED','suc');}else{tasks.push({id:Date.now().toString(),name,priority,status,due,requester,executor,cat,notes,created:new Date().toISOString()});toast('◈ MISSION LAUNCHED','suc');}save();renderAll();closeModal();}
+function syncPri(){[['h','high'],['m','medium'],['l','low']].forEach(([k,v])=>{const r=document.querySelector(`[name="pri"][value="${v}"]`);document.getElementById(`opt-${k}`).classList.toggle('sel',r?.checked||false);});}
+function toast(msg,type='suc'){const w=document.getElementById('toastW');const el=document.createElement('div');el.className=`toast ${type}`;el.innerHTML=`<span class="t-i"><i class="fa-solid fa-${type==='suc'?'circle-check':'triangle-exclamation'}"></i></span>${msg}`;w.appendChild(el);setTimeout(()=>{el.style.animation='toastOut 0.3s ease forwards';setTimeout(()=>el.remove(),300);},3000);}
+function confetti(){const cols=['#00e5ff','#9d4dfa','#00ff88','#ff2d6b','#ff9800','#ffffff'];const cx=window.innerWidth/2,cy=window.innerHeight/2;for(let i=0;i<28;i++){const p=document.createElement('div');p.className='cp';const a=Math.random()*360,d=90+Math.random()*140;p.style.cssText=`left:${cx}px;top:${cy}px;background:${cols[i%cols.length]};--tx:${Math.cos(a*Math.PI/180)*d}px;--ty:${Math.sin(a*Math.PI/180)*d}px;animation-duration:${0.8+Math.random()*0.5}s;animation-delay:${Math.random()*0.2}s;box-shadow:0 0 6px ${cols[i%cols.length]};`;document.body.appendChild(p);setTimeout(()=>p.remove(),1500);}}
+
+init();
+</script>
+</body>
+</html>
