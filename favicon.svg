@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#8b5cf6"/>
+      <stop offset="50%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="1" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- 背景：角丸グラデーション -->
+  <rect width="32" height="32" rx="7" fill="url(#grad)"/>
+  <!-- 内側の光沢 -->
+  <rect width="32" height="16" rx="7" fill="rgba(255,255,255,0.07)"/>
+  <!-- 稲妻アイコン -->
+  <path d="M19.5 3.5 L10 17.5 L16.5 17.5 L12.5 28.5 L23 14 L16.5 14 Z"
+        fill="white"
+        filter="url(#glow)"
+        opacity="0.95"/>
+</svg>
