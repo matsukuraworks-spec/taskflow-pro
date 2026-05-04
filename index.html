@@ -26,7 +26,7 @@
             --accent-cyan: #06b6d4;
             --accent-gradient: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 50%, #06b6d4 100%);
             --priority-high: #ef4444;
-            --priority-medium: #f97316;
+            --priority-medium: #eab308;
             --priority-low: #22c55e;
             --radius: 16px;
             --radius-sm: 10px;
@@ -602,7 +602,7 @@
         }
 
         .badge-high   { background: rgba(239,68,68,0.13);   color: #f87171; }
-        .badge-medium { background: rgba(249,115,22,0.13);  color: #fb923c; }
+        .badge-medium { background: rgba(234,179,8,0.14);   color: #fbbf24; }
         .badge-low    { background: rgba(34,197,94,0.13);   color: #4ade80; }
 
         .badge-todo     { background: rgba(99,102,241,0.13); color: #a5b4fc; }
@@ -813,11 +813,11 @@
         .pri-opt .p-lbl { font-size: 11px; font-weight: 700; letter-spacing: 0.5px; }
 
         .pri-opt.ph:hover, .pri-opt.ph.sel { border-color: #ef4444; background: rgba(239,68,68,0.08); }
-        .pri-opt.pm:hover, .pri-opt.pm.sel { border-color: #f97316; background: rgba(249,115,22,0.08); }
+        .pri-opt.pm:hover, .pri-opt.pm.sel { border-color: #eab308; background: rgba(234,179,8,0.08); }
         .pri-opt.pl:hover, .pri-opt.pl.sel { border-color: #22c55e; background: rgba(34,197,94,0.08); }
 
         .pri-opt.ph .p-lbl { color: #ef4444; }
-        .pri-opt.pm .p-lbl { color: #f97316; }
+        .pri-opt.pm .p-lbl { color: #eab308; }
         .pri-opt.pl .p-lbl { color: #22c55e; }
 
         .form-row {
@@ -1153,11 +1153,61 @@
             .tasks-list { grid-template-columns: 1fr; }
         }
 
-        @media (max-width: 520px) {
-            .stats-grid { grid-template-columns: 1fr 1fr; }
+        /* タッチデバイス：アクションボタンを常時表示 */
+        @media (hover: none) {
+            .task-actions { opacity: 1 !important; }
+        }
+
+        /* スマホ中（〜680px）: 内部スクロール解除・ヘッダー簡略化 */
+        @media (max-width: 680px) {
+            .app-layout { grid-template-rows: 56px auto; }
+            .main { overflow-y: visible; padding: 12px 14px 40px; }
+            .header { padding: 0 14px; }
             .header-date { display: none; }
+            .streak-badge { display: none; }
+            .logo-text { font-size: 17px; }
             .tasks-list { grid-template-columns: 1fr; }
-            .status-strip-stats { gap: 10px; }
+        }
+
+        /* スマホ小（〜480px）: 最大限コンパクト化 */
+        @media (max-width: 480px) {
+            .header { padding: 0 12px; height: 52px; }
+            .logo-icon { width: 28px; height: 28px; font-size: 13px; border-radius: 7px; }
+            .logo-text { font-size: 14px; }
+            /* 追加ボタン：アイコンのみ */
+            .btn-add { width: 34px; height: 34px; padding: 0; justify-content: center; font-size: 0; border-radius: 9px; gap: 0; box-shadow: 0 3px 12px rgba(139,92,246,0.4); }
+            .btn-add i { font-size: 14px; }
+            /* メイン */
+            .main { padding: 10px 12px 36px; gap: 8px; }
+            /* ステータスストリップ */
+            .status-strip { padding: 7px 10px; }
+            .status-strip-stats { gap: 7px; }
+            .ss-label { display: none; }
+            .ss-num { font-size: 13px; }
+            /* 統計カード */
+            .stats-grid { gap: 8px; }
+            .stat-card { padding: 10px 12px; }
+            .stat-value { font-size: 22px; }
+            .stat-sub { font-size: 10px; }
+            /* タスクヘッダー */
+            .tasks-header { flex-direction: column; align-items: flex-start; gap: 6px; }
+            .tasks-controls { width: 100%; }
+            .search-bar { flex: 1; min-width: 0; }
+            .search-bar input { width: 100%; min-width: 0; }
+            /* タスクカード */
+            .task-card { padding: 9px 8px 9px 14px; gap: 8px; }
+            .task-name { font-size: 12.5px; margin-bottom: 4px; }
+            .badge { font-size: 10px; padding: 2px 6px; }
+            .num-badge { font-size: 10px; padding: 2px 5px; min-width: 26px; }
+            /* 音声バー */
+            .voice-bar { padding: 9px 12px; }
+            .voice-examples { display: none; }
+            /* 確認ポップアップ */
+            .confirm-box { padding: 20px 18px; }
+            .confirm-msg { font-size: 14px; }
+            /* トースト */
+            .toast-wrap { bottom: 16px; right: 12px; left: 12px; }
+            .toast { max-width: 100%; }
         }
     </style>
 </head>
@@ -1214,7 +1264,7 @@
             <span class="s-count" id="c-high">0</span>
         </div>
         <div class="sidebar-item" onclick="setFilter('pri-medium',this)">
-            <span class="p-dot" style="background:#f97316"></span>
+            <span class="p-dot" style="background:#eab308"></span>
             中優先
             <span class="s-count" id="c-medium">0</span>
         </div>
@@ -1400,7 +1450,7 @@
                     </label>
                     <label class="pri-opt pm" id="opt-m">
                         <input type="radio" name="pri" value="medium" onchange="syncPri()">
-                        <span class="p-icon">🟠</span><span class="p-lbl">中</span>
+                        <span class="p-icon">🟡</span><span class="p-lbl">中</span>
                     </label>
                     <label class="pri-opt pl" id="opt-l">
                         <input type="radio" name="pri" value="low" onchange="syncPri()">
