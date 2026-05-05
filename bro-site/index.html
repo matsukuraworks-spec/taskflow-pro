@@ -570,27 +570,27 @@
         </div>
         <div class="header-date" id="hDate"></div>
         <div style="display:flex;align-items:center;gap:12px">
-            <div class="streak">⚡ <span id="streakNum">0</span> DAYS</div>
+            <div class="streak">⚡ <span id="streakNum">0</span>日連続</div>
             <button class="btn-add" onclick="openModal()">
-                <i class="fa-solid fa-plus"></i> MISSION ADD
+                <i class="fa-solid fa-plus"></i> タスクを追加
             </button>
         </div>
     </header>
 
     <aside class="sidebar">
-        <div class="s-sep">Navigation</div>
-        <div class="s-item active" onclick="setFilter('all',this)"><span class="s-icon">◈</span>ALL TASKS<span class="s-count" id="c-all">0</span></div>
-        <div class="s-item" onclick="setFilter('today',this)"><span class="s-icon">◉</span>TODAY<span class="s-count" id="c-today">0</span></div>
-        <div class="s-item" onclick="setFilter('overdue',this)"><span class="s-icon">⚠</span>OVERDUE<span class="s-count" id="c-overdue">0</span></div>
-        <div class="s-item" onclick="setFilter('done',this)"><span class="s-icon">✓</span>COMPLETED<span class="s-count" id="c-done">0</span></div>
-        <div class="s-sep">Priority</div>
-        <div class="s-item" onclick="setFilter('pri-high',this)"><span class="p-dot" style="background:var(--red)"></span>CRITICAL<span class="s-count" id="c-high">0</span></div>
-        <div class="s-item" onclick="setFilter('pri-medium',this)"><span class="p-dot" style="background:var(--purple)"></span>NORMAL<span class="s-count" id="c-medium">0</span></div>
-        <div class="s-item" onclick="setFilter('pri-low',this)"><span class="p-dot" style="background:var(--green)"></span>LOW<span class="s-count" id="c-low">0</span></div>
-        <div class="s-sep">Status</div>
-        <div class="s-item" onclick="setFilter('s-todo',this)"><span class="s-icon" style="color:var(--purple)">●</span>STANDBY<span class="s-count" id="c-todo">0</span></div>
-        <div class="s-item" onclick="setFilter('s-progress',this)"><span class="s-icon" style="color:var(--orange)">◑</span>IN FLIGHT<span class="s-count" id="c-prog">0</span></div>
-        <div class="s-item" onclick="setFilter('s-done',this)"><span class="s-icon" style="color:var(--green)">◉</span>LANDED<span class="s-count" id="c-sdone">0</span></div>
+        <div class="s-sep">表示フィルター</div>
+        <div class="s-item active" onclick="setFilter('all',this)"><span class="s-icon">◈</span>すべてのタスク<span class="s-count" id="c-all">0</span></div>
+        <div class="s-item" onclick="setFilter('today',this)"><span class="s-icon">◉</span>今日の期限<span class="s-count" id="c-today">0</span></div>
+        <div class="s-item" onclick="setFilter('overdue',this)"><span class="s-icon">⚠</span>期限超過<span class="s-count" id="c-overdue">0</span></div>
+        <div class="s-item" onclick="setFilter('done',this)"><span class="s-icon">✓</span>完了済み<span class="s-count" id="c-done">0</span></div>
+        <div class="s-sep">優先順位</div>
+        <div class="s-item" onclick="setFilter('pri-high',this)"><span class="p-dot" style="background:var(--red)"></span>高優先<span class="s-count" id="c-high">0</span></div>
+        <div class="s-item" onclick="setFilter('pri-medium',this)"><span class="p-dot" style="background:var(--purple)"></span>中優先<span class="s-count" id="c-medium">0</span></div>
+        <div class="s-item" onclick="setFilter('pri-low',this)"><span class="p-dot" style="background:var(--green)"></span>低優先<span class="s-count" id="c-low">0</span></div>
+        <div class="s-sep">ステータス</div>
+        <div class="s-item" onclick="setFilter('s-todo',this)"><span class="s-icon" style="color:var(--purple)">●</span>未着手<span class="s-count" id="c-todo">0</span></div>
+        <div class="s-item" onclick="setFilter('s-progress',this)"><span class="s-icon" style="color:var(--orange)">◑</span>進行中<span class="s-count" id="c-prog">0</span></div>
+        <div class="s-item" onclick="setFilter('s-done',this)"><span class="s-icon" style="color:var(--green)">◉</span>完了<span class="s-count" id="c-sdone">0</span></div>
     </aside>
 
     <main class="main">
@@ -601,49 +601,49 @@
 
         <div class="stats">
             <div class="stat">
-                <div class="stat-lbl">MISSIONS</div>
+                <div class="stat-lbl">総タスク数</div>
                 <div class="stat-val" id="sTot" style="background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">0</div>
-                <div class="stat-sub">total active</div>
+                <div class="stat-sub">登録中のタスク</div>
             </div>
             <div class="stat">
-                <div class="stat-lbl">COMPLETED</div>
+                <div class="stat-lbl">完了済み</div>
                 <div class="stat-val" id="sDone" style="color:var(--green)">0</div>
-                <div class="stat-sub">missions done</div>
+                <div class="stat-sub">タスク完了数</div>
             </div>
             <div class="stat">
-                <div class="stat-lbl">DUE TODAY</div>
+                <div class="stat-lbl">今日の期限</div>
                 <div class="stat-val" id="sToday" style="color:var(--cyan)">0</div>
-                <div class="stat-sub">launching today</div>
+                <div class="stat-sub">本日締切</div>
             </div>
             <div class="stat">
-                <div class="stat-lbl">OVERDUE</div>
+                <div class="stat-lbl">期限超過</div>
                 <div class="stat-val" id="sOver" style="color:var(--red)">0</div>
-                <div class="stat-sub">needs attention</div>
+                <div class="stat-sub">要対応</div>
             </div>
         </div>
 
         <div class="prog">
             <div class="prog-hd">
-                <span class="prog-ttl">◈ MISSION PROGRESS</span>
+                <span class="prog-ttl">◈ 全体の達成率</span>
                 <span class="prog-pct" id="pPct">0%</span>
             </div>
             <div class="prog-track"><div class="prog-fill" id="pBar" style="width:0%"></div></div>
         </div>
 
         <div class="tasks-hd">
-            <h2 class="tasks-ttl" id="listTitle">ALL MISSIONS</h2>
+            <h2 class="tasks-ttl" id="listTitle">すべてのタスク</h2>
             <div class="controls">
                 <div class="search">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="searchEl" placeholder="Search missions..." oninput="renderTasks()">
+                    <input type="text" id="searchEl" placeholder="タスクを検索..." oninput="renderTasks()">
                 </div>
                 <div class="sort-wrap">
-                    <button class="ctrl" onclick="toggleSort(event)"><i class="fa-solid fa-arrow-up-wide-short"></i> SORT</button>
+                    <button class="ctrl" onclick="toggleSort(event)"><i class="fa-solid fa-arrow-up-wide-short"></i> 並び替え</button>
                     <div class="sort-menu" id="sortMenu">
-                        <div class="sort-opt active" onclick="setSort('priority',this)">Priority</div>
-                        <div class="sort-opt" onclick="setSort('due',this)">Due Date</div>
-                        <div class="sort-opt" onclick="setSort('created',this)">Created</div>
-                        <div class="sort-opt" onclick="setSort('name',this)">Name</div>
+                        <div class="sort-opt active" onclick="setSort('priority',this)">優先順位順</div>
+                        <div class="sort-opt" onclick="setSort('due',this)">期限順</div>
+                        <div class="sort-opt" onclick="setSort('created',this)">作成日順</div>
+                        <div class="sort-opt" onclick="setSort('name',this)">名前順</div>
                     </div>
                 </div>
             </div>
@@ -662,37 +662,37 @@
         </div>
         <div class="m-body">
             <div class="f-group">
-                <label class="f-lbl">Mission Name</label>
-                <input class="f-input" id="fName" type="text" placeholder="ミッション名を入力..." onkeydown="if(event.key==='Enter')saveTask()">
+                <label class="f-lbl">タスク名</label>
+                <input class="f-input" id="fName" type="text" placeholder="何をする必要がありますか？" onkeydown="if(event.key==='Enter')saveTask()">
             </div>
             <div class="f-group">
-                <label class="f-lbl">Priority Level</label>
+                <label class="f-lbl">優先順位</label>
                 <div class="pri-grp">
-                    <label class="pri-opt ph sel" id="opt-h"><input type="radio" name="pri" value="high" checked onchange="syncPri()"><span class="p-ico">🔴</span><span class="p-lbl">CRITICAL</span></label>
-                    <label class="pri-opt pm" id="opt-m"><input type="radio" name="pri" value="medium" onchange="syncPri()"><span class="p-ico">🟣</span><span class="p-lbl">NORMAL</span></label>
-                    <label class="pri-opt pl" id="opt-l"><input type="radio" name="pri" value="low" onchange="syncPri()"><span class="p-ico">🟢</span><span class="p-lbl">LOW</span></label>
+                    <label class="pri-opt ph sel" id="opt-h"><input type="radio" name="pri" value="high" checked onchange="syncPri()"><span class="p-ico">🔴</span><span class="p-lbl">高</span></label>
+                    <label class="pri-opt pm" id="opt-m"><input type="radio" name="pri" value="medium" onchange="syncPri()"><span class="p-ico">🟣</span><span class="p-lbl">中</span></label>
+                    <label class="pri-opt pl" id="opt-l"><input type="radio" name="pri" value="low" onchange="syncPri()"><span class="p-ico">🟢</span><span class="p-lbl">低</span></label>
                 </div>
             </div>
             <div class="f-row">
                 <div class="f-group">
-                    <label class="f-lbl">Status</label>
-                    <select class="f-sel" id="fStatus"><option value="todo">STANDBY</option><option value="progress">IN FLIGHT</option><option value="done">LANDED</option></select>
+                    <label class="f-lbl">ステータス</label>
+                    <select class="f-sel" id="fStatus"><option value="todo">未着手</option><option value="progress">進行中</option><option value="done">完了</option></select>
                 </div>
                 <div class="f-group">
-                    <label class="f-lbl">Launch Date</label>
+                    <label class="f-lbl">期限日</label>
                     <input class="f-input" id="fDue" type="date">
                 </div>
             </div>
             <div class="f-row">
-                <div class="f-group"><label class="f-lbl">Requester</label><input class="f-input" id="fReq" type="text" placeholder="依頼者..."></div>
-                <div class="f-group"><label class="f-lbl">Executor</label><input class="f-input" id="fExe" type="text" placeholder="実行者..."></div>
+                <div class="f-group"><label class="f-lbl">依頼者</label><input class="f-input" id="fReq" type="text" placeholder="誰からの依頼？"></div>
+                <div class="f-group"><label class="f-lbl">実行者</label><input class="f-input" id="fExe" type="text" placeholder="誰が担当？"></div>
             </div>
-            <div class="f-group"><label class="f-lbl">Category</label><input class="f-input" id="fCat" type="text" placeholder="カテゴリ..."></div>
-            <div class="f-group"><label class="f-lbl">Mission Log</label><textarea class="f-area" id="fNotes" placeholder="詳細や備考..."></textarea></div>
+            <div class="f-group"><label class="f-lbl">カテゴリ</label><input class="f-input" id="fCat" type="text" placeholder="例: 仕事 / 個人 / 学習"></div>
+            <div class="f-group"><label class="f-lbl">備考・メモ</label><textarea class="f-area" id="fNotes" placeholder="詳細や補足情報を入力..."></textarea></div>
         </div>
         <div class="m-foot">
-            <button class="btn btn-sec" onclick="closeModal()">ABORT</button>
-            <button class="btn btn-pri" onclick="saveTask()">◈ LAUNCH</button>
+            <button class="btn btn-sec" onclick="closeModal()">キャンセル</button>
+            <button class="btn btn-pri" onclick="saveTask()">◈ 保存する</button>
         </div>
     </div>
 </div>
@@ -736,11 +736,11 @@ const QUOTES=[
     {t:'今日の努力が、明日の軌道を決める。',a:'ー'},
 ];
 
-const FTITLES={all:'ALL MISSIONS',today:'TODAY\'S MISSIONS',overdue:'OVERDUE',done:'COMPLETED','pri-high':'CRITICAL MISSIONS','pri-medium':'NORMAL MISSIONS','pri-low':'LOW PRIORITY','s-todo':'STANDBY','s-progress':'IN FLIGHT','s-done':'LANDED'};
+const FTITLES={all:'すべてのタスク',today:'今日の期限',overdue:'期限超過タスク',done:'完了済みタスク','pri-high':'高優先タスク','pri-medium':'中優先タスク','pri-low':'低優先タスク','s-todo':'未着手タスク','s-progress':'進行中タスク','s-done':'完了タスク'};
 
 function init(){
     const now=new Date();
-    document.getElementById('hDate').textContent=now.toLocaleDateString('ja-JP',{year:'numeric',month:'2-digit',day:'2-digit'}).replace(/\//g,'.')+' '+['SUN','MON','TUE','WED','THU','FRI','SAT'][now.getDay()];
+    document.getElementById('hDate').textContent=now.toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
     const q=QUOTES[Math.floor(Math.random()*QUOTES.length)];
     document.getElementById('quoteEl').innerHTML=`<strong>「${q.t}」</strong> — ${q.a}`;
     checkStreak();document.getElementById('streakNum').textContent=streak;
@@ -767,9 +767,9 @@ function esc(s){const d=document.createElement('div');d.appendChild(document.cre
 function renderTasks(){
     const el=document.getElementById('taskList');
     const items=getSorted(getFiltered());
-    if(!items.length){el.innerHTML=`<div class="empty"><i class="fa-solid fa-rocket"></i><p>NO MISSIONS</p><span>MISSION ADD ボタンから新しいミッションを登録</span></div>`;return;}
-    const PL={high:'CRITICAL',medium:'NORMAL',low:'LOW'};
-    const SL={todo:'STANDBY',progress:'IN FLIGHT',done:'LANDED'};
+    if(!items.length){el.innerHTML=`<div class="empty"><i class="fa-solid fa-rocket"></i><p>タスクがありません</p><span>「タスクを追加」ボタンから新しいタスクを作成しましょう！</span></div>`;return;}
+    const PL={high:'高優先',medium:'中優先',low:'低優先'};
+    const SL={todo:'未着手',progress:'進行中',done:'完了'};
     el.innerHTML=items.map(t=>{
         const d=dueDate(t),over=isOver(t),tod=isToday(t);
         let db='';if(d){const lbl=`${d.getMonth()+1}/${d.getDate()}`,cls=over?'overdue':tod?'today':'';db=`<span class="badge-date ${cls}">${over?'⚠':''} ${lbl}</span>`;}
@@ -792,14 +792,14 @@ function renderTasks(){
     }).join('');
 }
 
-function toggleDone(id){const t=tasks.find(x=>x.id===id);if(!t)return;const was=t.status==='done';t.status=was?'todo':'done';if(!was){bumpStreak();toast('◈ MISSION COMPLETE!','suc');confetti();}save();renderAll();}
-function delTask(id){if(!confirm('このミッションを削除しますか？'))return;tasks=tasks.filter(t=>t.id!==id);save();renderAll();toast('MISSION DELETED','wrn');}
+function toggleDone(id){const t=tasks.find(x=>x.id===id);if(!t)return;const was=t.status==='done';t.status=was?'todo':'done';if(!was){bumpStreak();toast('🎉 タスク完了！お疲れさまです！','suc');confetti();}save();renderAll();}
+function delTask(id){if(!confirm('このタスクを削除しますか？'))return;tasks=tasks.filter(t=>t.id!==id);save();renderAll();toast('タスクを削除しました','wrn');}
 function save(){localStorage.setItem('stellar_tasks',JSON.stringify(tasks));}
-function openModal(){editId=null;document.getElementById('mTitle').textContent='NEW MISSION';['fName','fDue','fReq','fExe','fCat','fNotes'].forEach(id=>document.getElementById(id).value='');document.getElementById('fStatus').value='todo';document.querySelector('[name="pri"][value="high"]').checked=true;syncPri();document.getElementById('overlay').classList.add('open');setTimeout(()=>document.getElementById('fName').focus(),80);}
-function openEdit(id){const t=tasks.find(x=>x.id===id);if(!t)return;editId=id;document.getElementById('mTitle').textContent='EDIT MISSION';document.getElementById('fName').value=t.name;document.getElementById('fStatus').value=t.status;document.getElementById('fDue').value=t.due||'';document.getElementById('fReq').value=t.requester||'';document.getElementById('fExe').value=t.executor||'';document.getElementById('fCat').value=t.cat||'';document.getElementById('fNotes').value=t.notes||'';const r=document.querySelector(`[name="pri"][value="${t.priority}"]`);if(r)r.checked=true;syncPri();document.getElementById('overlay').classList.add('open');setTimeout(()=>document.getElementById('fName').focus(),80);}
+function openModal(){editId=null;document.getElementById('mTitle').textContent='新しいタスク';['fName','fDue','fReq','fExe','fCat','fNotes'].forEach(id=>document.getElementById(id).value='');document.getElementById('fStatus').value='todo';document.querySelector('[name="pri"][value="high"]').checked=true;syncPri();document.getElementById('overlay').classList.add('open');setTimeout(()=>document.getElementById('fName').focus(),80);}
+function openEdit(id){const t=tasks.find(x=>x.id===id);if(!t)return;editId=id;document.getElementById('mTitle').textContent='タスクを編集';document.getElementById('fName').value=t.name;document.getElementById('fStatus').value=t.status;document.getElementById('fDue').value=t.due||'';document.getElementById('fReq').value=t.requester||'';document.getElementById('fExe').value=t.executor||'';document.getElementById('fCat').value=t.cat||'';document.getElementById('fNotes').value=t.notes||'';const r=document.querySelector(`[name="pri"][value="${t.priority}"]`);if(r)r.checked=true;syncPri();document.getElementById('overlay').classList.add('open');setTimeout(()=>document.getElementById('fName').focus(),80);}
 function closeModal(){document.getElementById('overlay').classList.remove('open');editId=null;}
 function overlayClick(e){if(e.target===document.getElementById('overlay'))closeModal();}
-function saveTask(){const name=document.getElementById('fName').value.trim();if(!name){const el=document.getElementById('fName');el.style.borderColor='var(--red)';el.focus();setTimeout(()=>el.style.borderColor='',1400);return;}const priority=document.querySelector('[name="pri"]:checked')?.value||'medium',status=document.getElementById('fStatus').value,due=document.getElementById('fDue').value,requester=document.getElementById('fReq').value.trim(),executor=document.getElementById('fExe').value.trim(),cat=document.getElementById('fCat').value.trim(),notes=document.getElementById('fNotes').value.trim();if(editId){const t=tasks.find(x=>x.id===editId);if(t)Object.assign(t,{name,priority,status,due,requester,executor,cat,notes});toast('◈ MISSION UPDATED','suc');}else{tasks.push({id:Date.now().toString(),name,priority,status,due,requester,executor,cat,notes,created:new Date().toISOString()});toast('◈ MISSION LAUNCHED','suc');}save();renderAll();closeModal();}
+function saveTask(){const name=document.getElementById('fName').value.trim();if(!name){const el=document.getElementById('fName');el.style.borderColor='var(--red)';el.focus();setTimeout(()=>el.style.borderColor='',1400);return;}const priority=document.querySelector('[name="pri"]:checked')?.value||'medium',status=document.getElementById('fStatus').value,due=document.getElementById('fDue').value,requester=document.getElementById('fReq').value.trim(),executor=document.getElementById('fExe').value.trim(),cat=document.getElementById('fCat').value.trim(),notes=document.getElementById('fNotes').value.trim();if(editId){const t=tasks.find(x=>x.id===editId);if(t)Object.assign(t,{name,priority,status,due,requester,executor,cat,notes});toast('✅ タスクを更新しました','suc');}else{tasks.push({id:Date.now().toString(),name,priority,status,due,requester,executor,cat,notes,created:new Date().toISOString()});toast('✅ タスクを追加しました','suc');}save();renderAll();closeModal();}
 function syncPri(){[['h','high'],['m','medium'],['l','low']].forEach(([k,v])=>{const r=document.querySelector(`[name="pri"][value="${v}"]`);document.getElementById(`opt-${k}`).classList.toggle('sel',r?.checked||false);});}
 function toast(msg,type='suc'){const w=document.getElementById('toastW');const el=document.createElement('div');el.className=`toast ${type}`;el.innerHTML=`<span class="t-i"><i class="fa-solid fa-${type==='suc'?'circle-check':'triangle-exclamation'}"></i></span>${msg}`;w.appendChild(el);setTimeout(()=>{el.style.animation='toastOut 0.3s ease forwards';setTimeout(()=>el.remove(),300);},3000);}
 function confetti(){const cols=['#00e5ff','#9d4dfa','#00ff88','#ff2d6b','#ff9800','#ffffff'];const cx=window.innerWidth/2,cy=window.innerHeight/2;for(let i=0;i<28;i++){const p=document.createElement('div');p.className='cp';const a=Math.random()*360,d=90+Math.random()*140;p.style.cssText=`left:${cx}px;top:${cy}px;background:${cols[i%cols.length]};--tx:${Math.cos(a*Math.PI/180)*d}px;--ty:${Math.sin(a*Math.PI/180)*d}px;animation-duration:${0.8+Math.random()*0.5}s;animation-delay:${Math.random()*0.2}s;box-shadow:0 0 6px ${cols[i%cols.length]};`;document.body.appendChild(p);setTimeout(()=>p.remove(),1500);}}
