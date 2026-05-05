@@ -827,75 +827,75 @@
         <div class="logo-icon">◈</div>
         <div>
             <div class="logo-text">AURORA QUEST</div>
-            <div class="logo-sub">QUEST MANAGEMENT SYSTEM</div>
+            <div class="logo-sub">タスク管理システム</div>
         </div>
     </div>
     <div class="header-center">
         <div class="header-date" id="hDate"></div>
     </div>
     <div class="header-right">
-        <div class="combo-badge">⚡ COMBO <span id="streakNum">0</span></div>
-        <button class="btn-add" onclick="openModal()" title="Ctrl+K">
-            <i class="fa-solid fa-plus"></i>+ QUEST
+        <div class="combo-badge">⚡ 連続 <span id="streakNum">0</span>日</div>
+        <button class="btn-add" onclick="openModal()" title="Ctrl+K でも追加できます">
+            <i class="fa-solid fa-plus"></i>＋ タスク追加
         </button>
     </div>
 </header>
 
 <!-- ═══ SIDEBAR ══════════════════════════════════════════ -->
 <aside class="sidebar">
-    <div class="s-sep">◈ Quest Filter</div>
+    <div class="s-sep">◈ フィルター</div>
     <div class="s-item active" onclick="setFilter('all',this)">
         <span class="s-icon"><i class="fa-solid fa-list-check"></i></span>
-        ALL QUESTS
+        すべてのタスク
         <span class="s-count" id="c-all">0</span>
     </div>
     <div class="s-item" onclick="setFilter('today',this)">
         <span class="s-icon"><i class="fa-solid fa-calendar-day"></i></span>
-        TODAY
+        今日のタスク
         <span class="s-count" id="c-today">0</span>
     </div>
     <div class="s-item" onclick="setFilter('overdue',this)">
         <span class="s-icon"><i class="fa-solid fa-triangle-exclamation"></i></span>
-        OVERDUE
+        期限超過
         <span class="s-count" id="c-overdue">0</span>
     </div>
     <div class="s-item" onclick="setFilter('done',this)">
         <span class="s-icon"><i class="fa-solid fa-circle-check"></i></span>
-        CLEARED
+        完了済み
         <span class="s-count" id="c-done">0</span>
     </div>
 
-    <div class="s-sep">◈ Rank</div>
+    <div class="s-sep">◈ 優先度</div>
     <div class="s-item" onclick="setFilter('pri-high',this)">
         <span class="p-dot" style="background:var(--red)"></span>
-        S RANK
+        高優先
         <span class="s-count" id="c-high">0</span>
     </div>
     <div class="s-item" onclick="setFilter('pri-medium',this)">
         <span class="p-dot" style="background:var(--yellow)"></span>
-        A RANK
+        中優先
         <span class="s-count" id="c-medium">0</span>
     </div>
     <div class="s-item" onclick="setFilter('pri-low',this)">
         <span class="p-dot" style="background:var(--green)"></span>
-        B RANK
+        低優先
         <span class="s-count" id="c-low">0</span>
     </div>
 
-    <div class="s-sep">◈ Status</div>
+    <div class="s-sep">◈ ステータス</div>
     <div class="s-item" onclick="setFilter('s-todo',this)">
         <span class="s-icon" style="color:var(--purple)">●</span>
-        STANDBY
+        未着手
         <span class="s-count" id="c-todo">0</span>
     </div>
     <div class="s-item" onclick="setFilter('s-progress',this)">
         <span class="s-icon" style="color:var(--orange)">◑</span>
-        ACTIVE
+        進行中
         <span class="s-count" id="c-progress">0</span>
     </div>
     <div class="s-item" onclick="setFilter('s-done',this)">
         <span class="s-icon" style="color:var(--green)">◉</span>
-        CLEARED
+        完了済み
         <span class="s-count" id="c-sdone">0</span>
     </div>
 </aside>
@@ -908,19 +908,19 @@
         <div class="status-strip-stats">
             <div class="ss-item">
                 <span class="ss-num" id="sTot" style="background:var(--grad-a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">0</span>
-                <span class="ss-label">QUESTS</span>
+                <span class="ss-label">タスク</span>
             </div>
             <div class="ss-item">
                 <span class="ss-num" id="sDone" style="color:var(--green)">0</span>
-                <span class="ss-label">CLEARED</span>
+                <span class="ss-label">完了</span>
             </div>
             <div class="ss-item">
                 <span class="ss-num" id="sToday" style="color:var(--cyan)">0</span>
-                <span class="ss-label">TODAY</span>
+                <span class="ss-label">今日</span>
             </div>
             <div class="ss-item">
                 <span class="ss-num" id="sOver" style="color:var(--red)">0</span>
-                <span class="ss-label">OVERDUE</span>
+                <span class="ss-label">期限超過</span>
             </div>
             <div class="ss-bar-wrap">
                 <div class="ss-bar-track">
@@ -930,7 +930,7 @@
             </div>
         </div>
         <div class="ss-toggle">
-            <span id="dashLabel">DETAIL</span>
+            <span id="dashLabel">詳細</span>
             <i class="fa-solid fa-chevron-down ss-chevron" id="dashChevron"></i>
         </div>
     </div>
@@ -944,30 +944,30 @@
 
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-label">Total Quests</div>
+                <div class="stat-label">総タスク数</div>
                 <div class="stat-value" id="sTot2" style="background:var(--grad-a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">0</div>
-                <div class="stat-sub">registered</div>
+                <div class="stat-sub">登録済み</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Cleared</div>
+                <div class="stat-label">完了</div>
                 <div class="stat-value" id="sDone2" style="color:var(--green)">0</div>
-                <div class="stat-sub">completed</div>
+                <div class="stat-sub">達成</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Due Today</div>
+                <div class="stat-label">今日期限</div>
                 <div class="stat-value" id="sToday2" style="color:var(--cyan)">0</div>
-                <div class="stat-sub">launching</div>
+                <div class="stat-sub">本日締切</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Overdue</div>
+                <div class="stat-label">期限超過</div>
                 <div class="stat-value" id="sOver2" style="color:var(--red)">0</div>
-                <div class="stat-sub">needs action</div>
+                <div class="stat-sub">要対応</div>
             </div>
         </div>
 
         <div class="progress-section">
             <div class="progress-header">
-                <span class="progress-title">◈ XP Progress</span>
+                <span class="progress-title">◈ 完了率</span>
                 <span class="progress-pct" id="pPct2">0%</span>
             </div>
             <div class="progress-track">
@@ -980,7 +980,7 @@
     <div class="voice-bar">
         <div class="voice-bar-title">
             <span class="voice-dot" id="vDot"></span>
-            ◈ COMMAND TERMINAL — AQUAVOICEで話しかけてください
+            ◈ コマンド入力 — タスクの操作をテキストで入力できます
         </div>
         <div class="voice-input-row">
             <input class="voice-input" id="voiceInput" type="text"
@@ -988,7 +988,7 @@
                 onkeydown="if(event.key==='Enter') runVoiceCommand()"
                 oninput="onVoiceType()">
             <button class="voice-exec" onclick="runVoiceCommand()">
-                <i class="fa-solid fa-bolt"></i> EXEC
+                <i class="fa-solid fa-bolt"></i> 実行
             </button>
         </div>
         <div class="voice-feedback" id="vFeedback"></div>
@@ -1002,15 +1002,15 @@
 
     <!-- Quest List Header -->
     <div class="tasks-header">
-        <h2 class="tasks-title" id="listTitle">ALL QUESTS</h2>
+        <h2 class="tasks-title" id="listTitle">すべてのタスク</h2>
         <div class="tasks-controls">
             <div class="search-bar">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="searchEl" placeholder="Search quests..." oninput="renderTasks()">
+                <input type="text" id="searchEl" placeholder="タスクを検索..." oninput="renderTasks()">
             </div>
             <div class="sort-wrap">
                 <button class="ctrl-btn" onclick="toggleSort(event)">
-                    <i class="fa-solid fa-arrow-up-wide-short"></i> SORT
+                    <i class="fa-solid fa-arrow-up-wide-short"></i> 並び替え
                 </button>
                 <div class="sort-menu" id="sortMenu">
                     <div class="sort-opt active" onclick="setSort('priority',this)">優先順位順</div>
@@ -1031,55 +1031,55 @@
 <div class="modal-overlay" id="overlay" onclick="overlayClick(event)">
     <div class="modal">
         <div class="modal-head">
-            <h3 class="modal-title" id="mTitle">NEW QUEST</h3>
+            <h3 class="modal-title" id="mTitle">タスクを追加</h3>
             <button class="modal-x" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <label class="form-label">Quest Name *</label>
-                <input class="form-input" id="fName" type="text" placeholder="クエスト名を入力..." onkeydown="if(event.key==='Enter')saveTask()">
+                <label class="form-label">タスク名 *</label>
+                <input class="form-input" id="fName" type="text" placeholder="タスク名を入力..." onkeydown="if(event.key==='Enter')saveTask()">
             </div>
             <div class="form-group">
-                <label class="form-label">Rank (Priority)</label>
+                <label class="form-label">優先度</label>
                 <div class="pri-group">
                     <label class="pri-opt ph sel" id="opt-h">
                         <input type="radio" name="pri" value="high" checked onchange="syncPri()">
-                        <span class="p-icon">🔴</span><span class="p-lbl">S RANK</span>
+                        <span class="p-icon">🔴</span><span class="p-lbl">高優先</span>
                     </label>
                     <label class="pri-opt pm" id="opt-m">
                         <input type="radio" name="pri" value="medium" onchange="syncPri()">
-                        <span class="p-icon">🟡</span><span class="p-lbl">A RANK</span>
+                        <span class="p-icon">🟡</span><span class="p-lbl">中優先</span>
                     </label>
                     <label class="pri-opt pl" id="opt-l">
                         <input type="radio" name="pri" value="low" onchange="syncPri()">
-                        <span class="p-icon">🟢</span><span class="p-lbl">B RANK</span>
+                        <span class="p-icon">🟢</span><span class="p-lbl">低優先</span>
                     </label>
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group">
-                    <label class="form-label">Status</label>
+                    <label class="form-label">ステータス</label>
                     <select class="form-select" id="fStatus">
-                        <option value="todo">STANDBY</option>
-                        <option value="progress">ACTIVE</option>
-                        <option value="done">CLEARED</option>
+                        <option value="todo">未着手</option>
+                        <option value="progress">進行中</option>
+                        <option value="done">完了済み</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Deadline</label>
+                    <label class="form-label">期限日</label>
                     <input class="form-input" id="fDue" type="date">
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group"><label class="form-label">Requester</label><input class="form-input" id="fRequester" type="text" placeholder="依頼者..."></div>
-                <div class="form-group"><label class="form-label">Executor</label><input class="form-input" id="fExecutor" type="text" placeholder="実行者..."></div>
+                <div class="form-group"><label class="form-label">依頼者</label><input class="form-input" id="fRequester" type="text" placeholder="依頼者..."></div>
+                <div class="form-group"><label class="form-label">担当者</label><input class="form-input" id="fExecutor" type="text" placeholder="担当者..."></div>
             </div>
-            <div class="form-group"><label class="form-label">Category</label><input class="form-input" id="fCat" type="text" placeholder="カテゴリ..."></div>
-            <div class="form-group"><label class="form-label">Quest Log (Notes)</label><textarea class="form-textarea" id="fNotes" placeholder="詳細・備考・リンク..."></textarea></div>
+            <div class="form-group"><label class="form-label">カテゴリ</label><input class="form-input" id="fCat" type="text" placeholder="カテゴリ..."></div>
+            <div class="form-group"><label class="form-label">メモ・備考</label><textarea class="form-textarea" id="fNotes" placeholder="詳細・備考・リンクなど..."></textarea></div>
         </div>
         <div class="modal-foot">
-            <button class="btn btn-sec" onclick="closeModal()">CANCEL</button>
-            <button class="btn btn-pri" onclick="saveTask()">◈ LAUNCH QUEST</button>
+            <button class="btn btn-sec" onclick="closeModal()">キャンセル</button>
+            <button class="btn btn-pri" onclick="saveTask()">◈ タスクを追加</button>
         </div>
     </div>
 </div>
@@ -1091,8 +1091,8 @@
         <div class="confirm-msg" id="confirmMsg"></div>
         <div class="confirm-task-chip" id="confirmChip"></div>
         <div class="confirm-btns">
-            <button class="confirm-yes" id="confirmYes" onclick="confirmExec()">◈ EXECUTE</button>
-            <button class="confirm-no" onclick="closeConfirm()">CANCEL</button>
+            <button class="confirm-yes" id="confirmYes" onclick="confirmExec()">◈ 実行する</button>
+            <button class="confirm-no" onclick="closeConfirm()">キャンセル</button>
         </div>
         <div class="confirm-hint">
             <kbd>Enter</kbd> で実行 &nbsp;·&nbsp; <kbd>Esc</kbd> でキャンセル
@@ -1199,8 +1199,8 @@ const INITIAL_TASKS = [
     { id:'s8', name:'おと教育動画 台本作成・スペース確保',          priority:'low',    status:'todo', due:'', requester:'', executor:'', cat:'', notes:'',                                                                                                                                                   created:'2026-05-05T00:00:07.000Z' },
 ];
 
-let tasks = JSON.parse(localStorage.getItem('tf_tasks') || 'null');
-if (!tasks) { tasks = INITIAL_TASKS; localStorage.setItem('tf_tasks', JSON.stringify(tasks)); }
+let tasks = JSON.parse(localStorage.getItem('tf_tasks_v2') || 'null');
+if (!tasks || tasks.length === 0) { tasks = INITIAL_TASKS.map(t=>({...t})); localStorage.setItem('tf_tasks_v2', JSON.stringify(tasks)); }
 let streak  = parseInt(localStorage.getItem('tf_streak')  || '0');
 let lastDay = localStorage.getItem('tf_lastday') || '';
 let editId  = null;
@@ -1228,7 +1228,7 @@ function toggleDash() {
     const label=document.getElementById('dashLabel');
     const isOpen=panel.classList.toggle('open');
     chevron.classList.toggle('open',isOpen);
-    label.textContent=isOpen?'CLOSE':'DETAIL';
+    label.textContent=isOpen?'閉じる':'詳細';
     localStorage.setItem('tf_dashOpen',isOpen?'1':'0');
 }
 
@@ -1248,7 +1248,7 @@ function init() {
     if (localStorage.getItem('tf_dashOpen')==='1') {
         document.getElementById('dashPanel').classList.add('open');
         document.getElementById('dashChevron').classList.add('open');
-        document.getElementById('dashLabel').textContent='CLOSE';
+        document.getElementById('dashLabel').textContent='閉じる';
     }
 
     // Auto-delete completed tasks older than 7 days
@@ -1293,9 +1293,9 @@ function bumpStreak() {
 
 /* ── FILTER / SORT ───────────────────────────────── */
 const FILTER_TITLES = {
-    all:'ALL QUESTS', today:'TODAY\'S QUESTS', overdue:'OVERDUE QUESTS', done:'CLEARED QUESTS',
-    'pri-high':'S RANK QUESTS','pri-medium':'A RANK QUESTS','pri-low':'B RANK QUESTS',
-    's-todo':'STANDBY QUESTS','s-progress':'ACTIVE QUESTS','s-done':'CLEARED QUESTS',
+    all:'すべてのタスク', today:'今日のタスク', overdue:'期限超過のタスク', done:'完了済みタスク',
+    'pri-high':'高優先タスク','pri-medium':'中優先タスク','pri-low':'低優先タスク',
+    's-todo':'未着手のタスク','s-progress':'進行中のタスク','s-done':'完了済みタスク',
 };
 
 function setFilter(f,el) {
@@ -1389,7 +1389,7 @@ function renderTasks() {
     const el=document.getElementById('taskList');
     const items=getSorted(getFiltered());
     if(!items.length){
-        el.innerHTML=`<div class="empty-state"><i class="fa-solid fa-rocket"></i><p>NO ACTIVE QUESTS</p><span>+ QUEST ボタンから新しいクエストを登録しよう</span></div>`;
+        el.innerHTML=`<div class="empty-state"><i class="fa-solid fa-rocket"></i><p>タスクがありません</p><span>右上の「＋ タスク追加」ボタンから新しいタスクを追加してみましょう</span></div>`;
         return;
     }
     el.innerHTML=items.map((t,idx)=>questCard(t,idx+1)).join('');
@@ -1407,8 +1407,8 @@ function linkify(s){
 }
 
 function questCard(t, num) {
-    const PRI_LBL = { high:'S RANK', medium:'A RANK', low:'B RANK' };
-    const STA_LBL = { todo:'STANDBY', progress:'ACTIVE', done:'CLEARED' };
+    const PRI_LBL = { high:'高優先', medium:'中優先', low:'低優先' };
+    const STA_LBL = { todo:'未着手', progress:'進行中', done:'完了済み' };
     const numLabel = `<span class="num-badge">#${String(num).padStart(2,'0')}</span>`;
 
     const today=new Date(); today.setHours(0,0,0,0);
@@ -1501,7 +1501,7 @@ function execVoice(task,action){
     if(action==='delete'){
         tasks=tasks.filter(t=>t.id!==task.id);save();renderAll();
         setFeedback(`✅ 「${task.name}」を削除しました`,'ok');
-        toast('◈ QUEST DELETED','warn');
+        toast('◈ タスクを削除しました','warn');
     } else if(action?.type==='status'){
         const t=tasks.find(x=>x.id===task.id);
         if(t){t.status=action.value;if(action.value==='done'){bumpStreak();confetti();}save();renderAll();
@@ -1541,7 +1541,7 @@ function toggleDone(id){
     const doComplete=()=>{
         t.status='done'; t.completedAt=new Date().toISOString();
         bumpStreak(); confetti();
-        toast('◈ QUEST CLEARED! お疲れ様！','success');
+        toast('◈ タスク完了！お疲れ様でした！','success');
         save(); renderAll();
     };
     if(card){
@@ -1553,15 +1553,16 @@ function toggleDone(id){
         setTimeout(doComplete, 1150);
     } else { doComplete(); }
 }
+
 function delTask(id){
-    if(!confirm('このクエストを削除しますか？'))return;
-    tasks=tasks.filter(t=>t.id!==id);save();renderAll();toast('◈ QUEST REMOVED','warn');
+    if(!confirm('このタスクを削除しますか？'))return;
+    tasks=tasks.filter(t=>t.id!==id);save();renderAll();toast('◈ タスクを削除しました','warn');
 }
-function save(){localStorage.setItem('tf_tasks',JSON.stringify(tasks));}
+function save(){localStorage.setItem('tf_tasks_v2',JSON.stringify(tasks));}
 
 /* ── MODAL ───────────────────────────────────────── */
 function openModal(){
-    editId=null;document.getElementById('mTitle').textContent='NEW QUEST';
+    editId=null;document.getElementById('mTitle').textContent='タスクを追加';
     ['fName','fDue','fRequester','fExecutor','fCat','fNotes'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('fStatus').value='todo';
     document.querySelector('[name="pri"][value="high"]').checked=true;syncPri();
@@ -1570,7 +1571,7 @@ function openModal(){
 }
 function openEdit(id){
     const t=tasks.find(x=>x.id===id);if(!t)return;
-    editId=id;document.getElementById('mTitle').textContent='EDIT QUEST';
+    editId=id;document.getElementById('mTitle').textContent='タスクを編集';
     document.getElementById('fName').value=t.name;document.getElementById('fStatus').value=t.status;
     document.getElementById('fDue').value=t.due||'';document.getElementById('fRequester').value=t.requester||'';
     document.getElementById('fExecutor').value=t.executor||'';document.getElementById('fCat').value=t.cat||'';
@@ -1592,8 +1593,8 @@ function saveTask(){
     const executor=document.getElementById('fExecutor').value.trim();
     const cat=document.getElementById('fCat').value.trim();
     const notes=document.getElementById('fNotes').value.trim();
-    if(editId){const t=tasks.find(x=>x.id===editId);if(t)Object.assign(t,{name,priority,status,due,requester,executor,cat,notes});toast('◈ QUEST UPDATED','success');}
-    else{tasks.push({id:Date.now().toString(),name,priority,status,due,requester,executor,cat,notes,created:new Date().toISOString()});toast('◈ QUEST LAUNCHED!','success');}
+    if(editId){const t=tasks.find(x=>x.id===editId);if(t)Object.assign(t,{name,priority,status,due,requester,executor,cat,notes});toast('◈ タスクを更新しました','success');}
+    else{tasks.push({id:Date.now().toString(),name,priority,status,due,requester,executor,cat,notes,created:new Date().toISOString()});toast('◈ タスクを追加しました！','success');}
     save();renderAll();closeModal();
 }
 function syncPri(){[['h','high'],['m','medium'],['l','low']].forEach(([k,v])=>{const r=document.querySelector(`[name="pri"][value="${v}"]`);document.getElementById(`opt-${k}`).classList.toggle('sel',r?.checked||false);});}
