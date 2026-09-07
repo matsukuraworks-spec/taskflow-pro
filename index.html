@@ -321,15 +321,16 @@
     .t-meta { display:flex;flex-wrap:wrap;gap:5px;align-items:center; }
 
     .rank-input {
-        width:34px;padding:2px 4px;border-radius:3px;text-align:center;
+        -webkit-appearance:none;appearance:none;
+        width:38px;padding:2px 4px;border-radius:3px;text-align:center;text-align-last:center;
         background:linear-gradient(135deg,rgba(157,77,250,0.28),rgba(0,229,255,0.18));
         border:1px solid rgba(0,229,255,0.5);font-family:'Orbitron',sans-serif;
         font-size:10px;font-weight:800;color:var(--cyan);font-variant-numeric:tabular-nums;
-        letter-spacing:0.5px;outline:none;cursor:text;
+        letter-spacing:0.5px;outline:none;cursor:pointer;
         box-shadow:0 0 12px rgba(0,229,255,0.35);text-shadow:0 0 8px rgba(0,229,255,0.9);
     }
     .rank-input:focus { border-color:var(--cyan);box-shadow:var(--glow-c); }
-    .rank-input::-webkit-outer-spin-button,.rank-input::-webkit-inner-spin-button { -webkit-appearance:none;margin:0; }
+    .rank-input option { background:#050e25;color:var(--text);text-shadow:none; }
 
     .badge {
         display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:3px;
@@ -772,6 +773,7 @@ let lastDay= localStorage.getItem('tf_lastday') || '';
 let editId=null, curFilter='all', curSort='priority';
 let confirmCallback=null, voiceDebounce=null;
 const PRI_ORD={high:0,medium:1,low:2};
+const RANK_OPTIONS=[1,2,3,4,5,6,7,8];
 
 const QUOTES=[
     {t:'星の数だけ可能性がある。今日も一つ、前へ。',a:'ー'},
@@ -922,7 +924,7 @@ function renderTasks(){
         const eb=t.executor?`<span class="badge badge-exe">${esc(t.executor)}</span>`:'';
         const nb=t.notes?`<div class="t-notes">${linkify(t.notes)}</div>`:'';
         const numLabel=t.status!=='done'
-            ?`<input type="number" min="1" class="rank-input" value="${t.rank||''}" title="優先順位（数字が小さいほど上位・完了すると自動で繰り上がります）" onclick="event.stopPropagation()" onmousedown="event.stopPropagation()" onchange="setRank('${t.id}',this.value)">`
+            ?`<select class="rank-input" title="優先順位（数字が小さいほど上位・完了すると自動で繰り上がります）" onclick="event.stopPropagation()" onmousedown="event.stopPropagation()" onchange="setRank('${t.id}',this.value)">${RANK_OPTIONS.map(n=>`<option value="${n}" ${n===t.rank?'selected':''}>${n}</option>`).join('')}</select>`
             :'';
         const handle=manualMode?`<span class="drag-handle" title="ドラッグで並び替え"><i class="fa-solid fa-grip-vertical"></i></span>`:'';
         return `<div class="task-card pri-${t.priority} ${t.status==='done'?'done':''} ${manualMode?'manual':''}" data-id="${t.id}" ${manualMode?'draggable="true"':''}>
