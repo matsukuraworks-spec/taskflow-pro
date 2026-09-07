@@ -320,14 +320,16 @@
     .t-name { font-size:13px;font-weight:600;color:var(--text);margin-bottom:5px;line-height:1.4; }
     .t-meta { display:flex;flex-wrap:wrap;gap:5px;align-items:center; }
 
-    .num-badge {
-        display:inline-flex;align-items:center;padding:2px 8px;border-radius:3px;
+    .rank-input {
+        width:34px;padding:2px 4px;border-radius:3px;text-align:center;
         background:linear-gradient(135deg,rgba(157,77,250,0.28),rgba(0,229,255,0.18));
         border:1px solid rgba(0,229,255,0.5);font-family:'Orbitron',sans-serif;
         font-size:10px;font-weight:800;color:var(--cyan);font-variant-numeric:tabular-nums;
-        min-width:32px;justify-content:center;letter-spacing:0.5px;
+        letter-spacing:0.5px;outline:none;cursor:text;
         box-shadow:0 0 12px rgba(0,229,255,0.35);text-shadow:0 0 8px rgba(0,229,255,0.9);
     }
+    .rank-input:focus { border-color:var(--cyan);box-shadow:var(--glow-c); }
+    .rank-input::-webkit-outer-spin-button,.rank-input::-webkit-inner-spin-button { -webkit-appearance:none;margin:0; }
 
     .badge {
         display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:3px;
@@ -509,9 +511,6 @@
     <div class="header-date" id="hDate"></div>
     <div style="display:flex;align-items:center;gap:12px">
         <div class="streak">⚡ <span id="streakNum">0</span> 日連続</div>
-        <button class="btn-add" id="syncBtn" onclick="openSyncModal()" style="border-color:var(--purple);color:var(--purple);box-shadow:var(--glow-p)" title="スマホ・PC間の同期設定">
-            <span id="syncDot">⚪</span> 同期
-        </button>
         <button class="btn-add" onclick="openModal()" title="Ctrl+K でも追加できます">
             <i class="fa-solid fa-plus"></i> タスク追加
         </button>
@@ -643,7 +642,7 @@
                 <button class="ctrl" onclick="toggleSort(event)"><i class="fa-solid fa-arrow-up-wide-short"></i> 並び替え</button>
                 <div class="sort-menu" id="sortMenu">
                     <div class="sort-opt active" onclick="setSort('priority',this)">優先度順</div>
-                    <div class="sort-opt" onclick="setSort('manual',this)">カスタム順（ドラッグで並び替え）</div>
+                    <div class="sort-opt" onclick="setSort('manual',this)">優先順位（数字ボックス／ドラッグ）</div>
                     <div class="sort-opt" onclick="setSort('due',this)">期限順</div>
                     <div class="sort-opt" onclick="setSort('created',this)">作成日順</div>
                     <div class="sort-opt" onclick="setSort('name',this)">名前順</div>
@@ -715,49 +714,8 @@
     </div>
 </div>
 
-<!-- ═══ 同期設定モーダル ═══════════════════════════ -->
-<div class="overlay" id="syncOverlay" onclick="syncOverlayClick(event)">
-    <div class="modal" style="width:480px">
-        <div class="m-head">
-            <h3 class="m-title" id="syncMTitle">スマホ・PC 同期設定</h3>
-            <button class="m-x" onclick="closeSyncModal()">✕</button>
-        </div>
-        <div class="m-body">
-            <div class="f-group">
-                <label class="f-lbl">ステータス</label>
-                <div id="syncStatusBig" style="font-size:13px;color:var(--text2);line-height:1.6">⚪ 未連携（このブラウザだけに保存されています）</div>
-            </div>
-            <div class="f-group" id="syncCodeGroup" style="display:none">
-                <label class="f-lbl">合言葉（他の端末にも同じものを入力すると同期されます）</label>
-                <div style="display:flex;gap:8px">
-                    <input class="f-input" id="syncCodeShow" readonly style="font-family:monospace;letter-spacing:1px">
-                    <button class="btn btn-sec" onclick="copyRoomCode()" style="white-space:nowrap">コピー</button>
-                </div>
-            </div>
-            <div class="f-group">
-                <label class="f-lbl">他の端末の合言葉を入力して接続</label>
-                <div style="display:flex;gap:8px">
-                    <input class="f-input" id="syncCodeInput" placeholder="合言葉を貼り付け...">
-                    <button class="btn btn-pri" onclick="applyRoomCode()" style="white-space:nowrap">接続</button>
-                </div>
-            </div>
-            <div class="f-group">
-                <button class="btn btn-sec" onclick="createNewRoom()">◈ 新しい合言葉を作成する（初回はこちら）</button>
-            </div>
-            <div class="f-group" id="disconnectGroup" style="display:none">
-                <button class="btn btn-sec" style="border-color:var(--red);color:var(--red)" onclick="disconnectRoom()">同期を解除してローカルのみに戻す</button>
-            </div>
-            <div style="font-size:11px;color:var(--muted);line-height:1.6">
-                ※合言葉を知っている人は誰でもこのタスクリストを閲覧・編集できます。第三者に教えないでください。
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="toast-w" id="toastW"></div>
 
-<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
 <script>
 /* ── STARFIELD ────────────────────────────────── */
 (function(){
@@ -815,32 +773,6 @@ let editId=null, curFilter='all', curSort='priority';
 let confirmCallback=null, voiceDebounce=null;
 const PRI_ORD={high:0,medium:1,low:2};
 
-/* ── FIREBASE 同期設定 ──────────────────────────
-   1) https://console.firebase.google.com で新規プロジェクトを作成（無料）
-   2)「Firestore Database」を作成（本番環境モードでOK。リージョンは asia-northeast1 推奨）
-   3) Firestoreの「ルール」タブを下記の内容に置き換えて公開:
-
-      rules_version = '2';
-      service cloud.firestore {
-        match /databases/{database}/documents {
-          match /taskflow_rooms/{roomId} {
-            allow read, write: if true;
-          }
-        }
-      }
-
-   4)「プロジェクトの設定」→「全般」の下部「マイアプリ」でウェブアプリを追加し、
-      表示された firebaseConfig の中身をそのまま下に貼り付ける
------------------------------------------------- */
-const FIREBASE_CONFIG = {
-    apiKey: "",
-    authDomain: "",
-    projectId: "",
-    storageBucket: "",
-    messagingSenderId: "",
-    appId: ""
-};
-
 const QUOTES=[
     {t:'星の数だけ可能性がある。今日も一つ、前へ。',a:'ー'},
     {t:'宇宙は広大だ。しかし、最初の一歩は小さくていい。',a:'ー'},
@@ -888,8 +820,8 @@ function init(){
         document.getElementById('dashChevron').classList.add('open');
         document.getElementById('dashLabel').textContent='閉じる';
     }
+    renumberRanks();
     renderAll();
-    initSync();
 
     document.addEventListener('keydown',e=>{
         const cOpen=document.getElementById('confirmOv').classList.contains('open');
@@ -939,7 +871,7 @@ function getFiltered(){
         }
     });
 }
-function getSorted(arr){return [...arr].sort((a,b)=>{if(curSort==='priority'){const d=PRI_ORD[a.priority]-PRI_ORD[b.priority];return d!==0?d:new Date(b.created)-new Date(a.created);}if(curSort==='due'){const da=dueDate(a),db=dueDate(b);if(!da&&!db)return 0;if(!da)return 1;if(!db)return -1;return da-db;}if(curSort==='created')return new Date(b.created)-new Date(a.created);if(curSort==='name')return a.name.localeCompare(b.name,'ja');return 0;});}
+function getSorted(arr){return [...arr].sort((a,b)=>{if(curSort==='priority'){const d=PRI_ORD[a.priority]-PRI_ORD[b.priority];return d!==0?d:new Date(b.created)-new Date(a.created);}if(curSort==='manual'){const ra=(typeof a.rank==='number')?a.rank:Infinity,rb=(typeof b.rank==='number')?b.rank:Infinity;return ra-rb;}if(curSort==='due'){const da=dueDate(a),db=dueDate(b);if(!da&&!db)return 0;if(!da)return 1;if(!db)return -1;return da-db;}if(curSort==='created')return new Date(b.created)-new Date(a.created);if(curSort==='name')return a.name.localeCompare(b.name,'ja');return 0;});}
 
 /* ── RENDER ──────────────────────────────────── */
 function renderAll(){renderStats();renderSide();renderTasks();}
@@ -989,7 +921,9 @@ function renderTasks(){
         const rb=t.requester?`<span class="badge badge-req">${esc(t.requester)}</span>`:'';
         const eb=t.executor?`<span class="badge badge-exe">${esc(t.executor)}</span>`:'';
         const nb=t.notes?`<div class="t-notes">${linkify(t.notes)}</div>`:'';
-        const numLabel=`<span class="num-badge">#${String(idx+1).padStart(2,'0')}</span>`;
+        const numLabel=t.status!=='done'
+            ?`<input type="number" min="1" class="rank-input" value="${t.rank||''}" title="優先順位（数字が小さいほど上位・完了すると自動で繰り上がります）" onclick="event.stopPropagation()" onmousedown="event.stopPropagation()" onchange="setRank('${t.id}',this.value)">`
+            :'';
         const handle=manualMode?`<span class="drag-handle" title="ドラッグで並び替え"><i class="fa-solid fa-grip-vertical"></i></span>`:'';
         return `<div class="task-card pri-${t.priority} ${t.status==='done'?'done':''} ${manualMode?'manual':''}" data-id="${t.id}" ${manualMode?'draggable="true"':''}>
             ${handle}
@@ -1026,17 +960,17 @@ function attachDrag(){
     });
 }
 function reorderManual(fromId,toId){
-    const visIds=getSorted(getFiltered()).map(t=>t.id);
-    const from=visIds.indexOf(fromId),to=visIds.indexOf(toId);
+    const activeSorted=tasks.filter(t=>t.status!=='done').sort((a,b)=>{
+        const ra=(typeof a.rank==='number')?a.rank:Infinity;
+        const rb=(typeof b.rank==='number')?b.rank:Infinity;
+        if(ra!==rb)return ra-rb;
+        return new Date(a.created)-new Date(b.created);
+    });
+    const from=activeSorted.findIndex(t=>t.id===fromId),to=activeSorted.findIndex(t=>t.id===toId);
     if(from<0||to<0)return;
-    visIds.splice(to,0,visIds.splice(from,1)[0]);
-    const slots=[];
-    tasks.forEach((t,i)=>{if(visIds.includes(t.id))slots.push(i);});
-    slots.sort((a,b)=>a-b);
-    const byId={};tasks.forEach(t=>byId[t.id]=t);
-    const newTasks=[...tasks];
-    visIds.forEach((id,k)=>{newTasks[slots[k]]=byId[id];});
-    tasks=newTasks;
+    const[moved]=activeSorted.splice(from,1);
+    activeSorted.splice(to,0,moved);
+    activeSorted.forEach((t,i)=>{t.rank=i+1;});
     save();renderTasks();
 }
 
@@ -1096,6 +1030,8 @@ function execVoice(task,action){
                 t.completedAt=new Date().toISOString();
                 bumpStreak();confetti();
                 toast('◈ タスク完了！お疲れ様でした！','suc');
+            } else if(t.status==='done'){
+                delete t.rank;
             }
             t.status=action.value;
             save();renderAll();
@@ -1128,7 +1064,7 @@ function confirmExec(){if(confirmCallback){confirmCallback();confirmCallback=nul
 /* ── TASK OPS ────────────────────────────────── */
 function toggleDone(id){
     const t=tasks.find(x=>x.id===id);if(!t)return;
-    if(t.status==='done'){t.status='todo';delete t.completedAt;save();renderAll();return;}
+    if(t.status==='done'){delete t.rank;t.status='todo';delete t.completedAt;save();renderAll();return;}
     const card=document.querySelector(`.task-card[data-id="${id}"]`);
     const doComplete=()=>{
         t.status='done';t.completedAt=new Date().toISOString();
@@ -1149,109 +1085,36 @@ function delTask(id){
     if(!confirm('このタスクを削除しますか？'))return;
     tasks=tasks.filter(t=>t.id!==id);save();renderAll();toast('タスクを削除しました','wrn');
 }
-function save(){localStorage.setItem('tf_tasks_v2',JSON.stringify(tasks));if(!applyingRemote)pushToCloud();}
+function save(){renumberRanks();localStorage.setItem('tf_tasks_v2',JSON.stringify(tasks));}
 
-/* ── クラウド同期（Firebase Firestore）──────────
-   合言葉（roomId）を鍵として、同じ合言葉を入れた端末同士でリアルタイムに
-   タスク一覧を共有する。ログイン機能はなく、合言葉自体が鍵になる方式。 */
-let db=null, roomId=localStorage.getItem('tf_room')||'', roomUnsub=null, applyingRemote=false, pushTimer=null;
-const deviceId=(()=>{let id=localStorage.getItem('tf_device');if(!id){id=Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem('tf_device',id);}return id;})();
-
-function genRoomCode(){
-    const bytes=crypto.getRandomValues(new Uint8Array(12));
-    return Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('');
-}
-
-function initSync(){
-    if(!FIREBASE_CONFIG.apiKey){setSyncStatus('unset');return;}
-    try{
-        if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);
-        db=firebase.firestore();
-    }catch(e){console.error(e);setSyncStatus('error');return;}
-    if(roomId)connectRoom(roomId);else setSyncStatus('offline');
-}
-
-function connectRoom(id){
-    if(!db)return;
-    if(roomUnsub)roomUnsub();
-    roomId=id;localStorage.setItem('tf_room',id);
-    setSyncStatus('connecting');
-    let first=true;
-    roomUnsub=db.collection('taskflow_rooms').doc(roomId).onSnapshot(snap=>{
-        setSyncStatus('online');
-        if(!snap.exists){first=false;pushToCloud();return;}
-        const data=snap.data();
-        const isOwn=data.updatedBy===deviceId;
-        const showToast=!first&&!isOwn;
-        first=false;
-        if(Array.isArray(data.tasks)){
-            applyingRemote=true;tasks=data.tasks;save();renderAll();applyingRemote=false;
-            if(showToast)toast('他の端末の更新を反映しました','suc');
-        }
-    },err=>{console.error(err);setSyncStatus('error');});
-}
-
-function pushToCloud(){
-    if(!db||!roomId)return;
-    clearTimeout(pushTimer);
-    pushTimer=setTimeout(()=>{
-        db.collection('taskflow_rooms').doc(roomId).set({tasks,updatedAt:Date.now(),updatedBy:deviceId})
-            .then(()=>setSyncStatus('online'))
-            .catch(e=>{console.error(e);setSyncStatus('error');});
-    },350);
-}
-
-function setSyncStatus(s){
-    const dot=document.getElementById('syncDot');if(!dot)return;
-    const MAP={unset:'⚪',connecting:'🟡',online:'🟢',error:'🔴',offline:'⚪'};
-    dot.textContent=MAP[s]||'⚪';
-    refreshSyncModal();
-}
-
-/* ── 同期設定モーダル ───────────────────────────── */
-function openSyncModal(){document.getElementById('syncCodeInput').value='';refreshSyncModal();document.getElementById('syncOverlay').classList.add('open');}
-function closeSyncModal(){document.getElementById('syncOverlay').classList.remove('open');}
-function syncOverlayClick(e){if(e.target===document.getElementById('syncOverlay'))closeSyncModal();}
-
-function refreshSyncModal(){
-    const big=document.getElementById('syncStatusBig');if(!big)return;
-    const codeGroup=document.getElementById('syncCodeGroup'),discGroup=document.getElementById('disconnectGroup');
-    if(!FIREBASE_CONFIG.apiKey){
-        big.textContent='⚠ 同期機能が未設定です（管理者に連絡してください）';
-        codeGroup.style.display='none';discGroup.style.display='none';return;
-    }
-    if(roomId){
-        big.textContent='🟢 同期が有効です（この合言葉の端末同士でタスクが共有されます）';
-        document.getElementById('syncCodeShow').value=roomId;
-        codeGroup.style.display='';discGroup.style.display='';
-    }else{
-        big.textContent='⚪ 未連携（このブラウザだけに保存されています）';
-        codeGroup.style.display='none';discGroup.style.display='none';
-    }
-}
-
-function createNewRoom(){
-    if(!FIREBASE_CONFIG.apiKey){toast('同期機能が未設定です','wrn');return;}
-    connectRoom(genRoomCode());
-    setTimeout(pushToCloud,300);
-    toast('合言葉を作成しました。他の端末にも入力してください','suc');
-}
-function applyRoomCode(){
-    if(!FIREBASE_CONFIG.apiKey){toast('同期機能が未設定です','wrn');return;}
-    const v=document.getElementById('syncCodeInput').value.trim();
-    if(!v){toast('合言葉を入力してください','wrn');return;}
-    showConfirm('🔗',`合言葉「${v}」に接続します。クラウド側にデータがある場合、現在のタスク一覧が置き換わります。よろしいですか？`,'',()=>{
-        closeConfirm();connectRoom(v);toast('接続しました','suc');
+/* ── 優先順位ランク（数字ボックス）──────────────
+   done以外のタスクだけを対象に、rankを1,2,3...の連番へ詰め直す。
+   完了・削除でタスクが抜けた分は、残りのタスクが自動的に繰り上がる。 */
+function renumberRanks(){
+    const active=tasks.filter(t=>t.status!=='done').sort((a,b)=>{
+        const ra=(typeof a.rank==='number')?a.rank:Infinity;
+        const rb=(typeof b.rank==='number')?b.rank:Infinity;
+        if(ra!==rb)return ra-rb;
+        return new Date(a.created)-new Date(b.created);
     });
+    active.forEach((t,i)=>{t.rank=i+1;});
 }
-function disconnectRoom(){
-    if(roomUnsub){roomUnsub();roomUnsub=null;}
-    roomId='';localStorage.removeItem('tf_room');
-    setSyncStatus('offline');toast('同期を解除しました','wrn');
-}
-function copyRoomCode(){
-    const el=document.getElementById('syncCodeShow');el.select();
-    navigator.clipboard?.writeText(el.value).then(()=>toast('コピーしました','suc')).catch(()=>{});
+
+function setRank(id,newRankRaw){
+    const t=tasks.find(x=>x.id===id);if(!t)return;
+    const parsed=parseInt(newRankRaw,10);
+    const newRank=Number.isFinite(parsed)&&parsed>=1?parsed:1;
+    const others=tasks.filter(x=>x.status!=='done'&&x.id!==id).sort((a,b)=>{
+        const ra=(typeof a.rank==='number')?a.rank:Infinity;
+        const rb=(typeof b.rank==='number')?b.rank:Infinity;
+        if(ra!==rb)return ra-rb;
+        return new Date(a.created)-new Date(b.created);
+    });
+    const insertAt=Math.min(newRank-1,others.length);
+    others.splice(insertAt,0,t);
+    others.forEach((task,i)=>{task.rank=i+1;});
+    save();renderAll();
+    toast(`優先順位を${t.rank}番に変更しました`,'suc');
 }
 
 /* ── MODAL ───────────────────────────────────── */
@@ -1287,7 +1150,7 @@ function saveTask(){
     const executor=document.getElementById('fExe').value.trim();
     const cat=document.getElementById('fCat').value.trim();
     const notes=document.getElementById('fNotes').value.trim();
-    if(editId){const t=tasks.find(x=>x.id===editId);if(t)Object.assign(t,{name,priority,status,due,requester,executor,cat,notes});toast('タスクを更新しました','suc');}
+    if(editId){const t=tasks.find(x=>x.id===editId);if(t){const wasDone=t.status==='done';Object.assign(t,{name,priority,status,due,requester,executor,cat,notes});if(wasDone&&status!=='done')delete t.rank;}toast('タスクを更新しました','suc');}
     else{tasks.push({id:Date.now().toString(),name,priority,status,due,requester,executor,cat,notes,created:new Date().toISOString()});toast('タスクを追加しました！','suc');}
     save();renderAll();closeModal();
 }
